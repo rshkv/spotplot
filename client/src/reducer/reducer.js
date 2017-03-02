@@ -1,9 +1,18 @@
-import { SET_TOKEN, FETCH_USER, RECEIVE_USER } from './actions';
+import {
+  SET_TOKEN,
+  FETCH_USER,
+  RECEIVE_USER,
+  FETCH_SONGS,
+  RECEIVE_SONGS,
+  END_FETCH_SONGS
+} from './actions';
 
 const initialState = {
   accessToken: null,
   fetchingUser: false,
+  fetchingSongs: false,
   user: null,
+  songs: [],
 };
 
 export default function reduce(state = initialState, action) {
@@ -28,6 +37,26 @@ export default function reduce(state = initialState, action) {
         ...state,
         fetchingUser: false,
         user,
+      };
+
+    case FETCH_SONGS:
+      return {
+        ...state,
+        fetchingSongs: true,
+      };
+
+    case RECEIVE_SONGS:
+      const { songs } = action;
+      return {
+        ...state,
+        songs: [...state.songs, ...songs],
+      };
+
+    case END_FETCH_SONGS:
+      console.log(state.songs);
+      return {
+        ...state,
+        fetchingSongs: false,
       };
 
     default:
