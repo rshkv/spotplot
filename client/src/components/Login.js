@@ -9,10 +9,12 @@ class Login extends Component {
     const { fetchingUser } = this.props;
     return (
       <div className="login">
-        <h1>Spotplot</h1>
-        { fetchingUser ?
-          <p>Loading user data...</p> :
-          <p>Welcome, please <a href='/login'>login</a></p> }
+        <div className="container">
+          <h1 className="title">Spotplot</h1>
+          { fetchingUser ?
+            <p className="subtitle">Loading user data...</p> :
+            <p className="subtitle">Welcome, please <a href='/login'>login</a></p> }
+        </div>
       </div>
     );
   }

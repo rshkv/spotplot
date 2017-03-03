@@ -21,8 +21,7 @@ export function fetchUser() {
         dispatch({ type: RECEIVE_USER, user: data });
       })
       .catch(e => {
-        console.error('Error fetching user');
-        console.log(e);
+        console.error(e);
       });
   };
 }
@@ -31,6 +30,7 @@ export function fetchSongs() {
   return (dispatch) => {
 
     const fetch = (next) => {
+      console.log(spotifyApi.getAccessToken());
       ((next) ? spotifyApi.getGeneric(next) : spotifyApi.getMySavedTracks({ limit: 50 }))
         .then(data => {
           dispatch({ type: RECEIVE_SONGS, songs: data.items.map(s => s.track), });

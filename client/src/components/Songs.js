@@ -6,36 +6,52 @@ import * as d3 from 'd3';
 class Songs extends Component {
 
   componentWillMount() {
-    console.log('Songs.componentWillMount()');
-
     const { dispatch } = this.props;
     dispatch(fetchSongs());
   }
 
   render() {
-    console.log('Songs.render()');
-
-    const { songs } = this.props;
+    const { songs, fetchingSongs } = this.props;
+    // console.log(`Songs.render() with ${songs.length} songs`);
+    // {
+    //   songs
+    //     .sort((a, b) => b.popularity - a.popularity)
+    //     .map((s, i) => (<p key={i}>{s.name}: {s.popularity}</p>))
+    // }
     return (
       <div className="songs">
-        <h1>Songs</h1>
-        <p>Amazing network animations go here</p>
-        <div className="network">
-          {songs
-            .sort((a, b) => b.popularity - a.popularity)
-            .map((s, i) => (<p key={i}>{s.name}: {s.popularity}</p>))
-          }
+        <div className="container">
+          <h1 className="title">Songs</h1>
+          {fetchingSongs && <p className="subtitle">Loading songs...</p>}
         </div>
+        <svg className="network"></svg>
       </div>
     );
   }
 
-  componentDidMount() {
-    console.log('Songs.componentDidMount()');
+  componentDidUpdate() {
+    const { songs, fetchingSongs } = this.props;
+    // console.log('Songs.componentDidUpdate()');
+
+    // if (fetchingSongs) return;
 
     // D3 Code goes here
-    console.log(d3);
+    // const svg = d3.select('.network').selectAll('svg')
+    //   .data([songs]);
+
+    const svg = d3.select('.network');
+
+    const nodes = svg.selectAll('circle')
+      .data(songs);
+
+    nodes.enter()
+      .append('circle')
+      .attr('r', 2)
+      .attr('cx', (d, i) => i * 5)
+      .attr('cy', (d, i) => i * 5)
+      .attr('fill', 'white');
+
   }
 }
 
-export default connect(({ user, fetchingSongs, songs }) => ({ user, fetchingSongs, songs }))(Songs);
+export default connect(({ fetchingSongs, songs }) => ({ fetchingSongs, songs }))(Songs);
