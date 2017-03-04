@@ -6,12 +6,12 @@ import { setToken, fetchUser } from '../reducer/actions';
 class Login extends Component {
 
   render() {
-    const { fetchingUser } = this.props;
+    const { fetchingUser, user } = this.props;
     return (
-      <div className="login">
-        <div className="container">
+      <div>
+        <div className="login container">
           <h1 className="title">Spotplot</h1>
-          { fetchingUser ?
+          { fetchingUser || user ?
             <p className="subtitle">Loading user data...</p> :
             <p className="subtitle">Welcome, please <a href='/login'>login</a></p> }
         </div>

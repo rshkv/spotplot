@@ -53,7 +53,6 @@ export default function reduce(state = initialState, action) {
       };
 
     case END_FETCH_SONGS:
-      console.log(state.songs);
       return {
         ...state,
         fetchingSongs: false,

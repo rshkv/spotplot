@@ -30,7 +30,6 @@ export function fetchSongs() {
   return (dispatch) => {
 
     const fetch = (next) => {
-      console.log(spotifyApi.getAccessToken());
       ((next) ? spotifyApi.getGeneric(next) : spotifyApi.getMySavedTracks({ limit: 50 }))
         .then(data => {
           dispatch({ type: RECEIVE_SONGS, songs: data.items.map(s => s.track), });

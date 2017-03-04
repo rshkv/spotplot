@@ -15,8 +15,14 @@ html, body {
     overflow: hidden; /* Removes scroll bars */
 }
 
-.container {
+.login.container {
     margin: 160px;
+}
+
+.songs.container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 .title {
@@ -38,4 +44,8 @@ html, body {
     width: 100%;
     height: 100%;
     z-index: -1;
+}
+
+.network .node {
+    fill: #1DB954;
 }
