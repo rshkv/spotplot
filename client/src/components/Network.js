@@ -5,7 +5,6 @@ import * as d3 from 'd3';
 export default class Network extends Component {
 
   render() {
-    console.log('Network.render()');
     return (
       <svg width="100%" height="100%">
         <g ref="network"/>

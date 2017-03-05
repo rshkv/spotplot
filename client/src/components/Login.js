@@ -8,8 +8,8 @@ class Login extends Component {
   render() {
     const { fetchingUser, user } = this.props;
     return (
-      <div>
-        <div className="login container">
+      <div className="container">
+        <div className="login">
           <h1 className="title">Spotplot</h1>
           { fetchingUser || user ?
             <p className="subtitle">Loading user data...</p> :
