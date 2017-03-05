@@ -39,8 +39,8 @@ export default class Network extends Component {
       });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { songs } = nextProps;
+  shouldComponentUpdate(nextProps) {
+    const { songs, onHover } = nextProps;
 
     const nodes = this.g.selectAll('.node')
       .data(songs, s => s.id);
@@ -48,6 +48,7 @@ export default class Network extends Component {
     nodes.enter().append('circle')
       .classed('node', true)
       .attr('r', d => Math.sqrt(d.popularity))
+      .on('mouseover', onHover)
       .style('fill-opacity', 0)
       .transition()
       .duration((d, i) => (i % 50) * 10)
