@@ -9,7 +9,7 @@ import Login from './components/Login';
 import Songs from './components/Songs';
 import Error from './components/Error';
 import SpotifyData from './reducer/reducer';
-import './main.css';
+import './main.less';
 
 const store = createStore(SpotifyData, applyMiddleware(thunkMiddleware));
 
