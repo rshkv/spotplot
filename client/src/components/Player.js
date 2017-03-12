@@ -2,23 +2,6 @@ import React, { Component } from 'react';
 import Sound from 'react-sound';
 import '../player.scss';
 
-export class OldPlayer extends Component {
-
-  render() {
-    const { uri } = this.props;
-    return (
-      <iframe
-        ref="iframe"
-        src={`https://embed.spotify.com/?uri=${uri}`}
-        width="250" height="330"
-        frameBorder="0"
-        allowTransparency="true"
-      />
-    );
-  }
-
-}
-
 export class Player extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +20,7 @@ export class Player extends Component {
     const togglePlaying = () => { this.setState({ playing: !playing }); }
     const onLoading = (bytesLoaded, bytesTotal, duration) => {
       console.log(`loaded: ${bytesLoaded}, total: ${bytesTotal}, duration: ${duration}`);
-    }
+    };
 
     return (
       <div className="player">

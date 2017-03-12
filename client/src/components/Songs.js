@@ -32,11 +32,6 @@ class Songs extends Component {
           <Network songs={songs} onHover={onHover} />
         </div>
         {selectedTrack && <Player track={selectedTrack} />}
-        {selectedTrack &&
-          <div className="old-player">
-            <OldPlayer uri={selectedTrack.uri} />
-          </div>
-        }
         <div className="songs">
           {fetchingSongs && <p className="subtitle">Loading songs...</p>}
         </div>
