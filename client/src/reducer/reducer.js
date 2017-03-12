@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import {
   SET_TOKEN,
   FETCH_USER,
@@ -7,59 +8,40 @@ import {
   END_FETCH_SONGS
 } from './actions';
 
-const initialState = {
-  accessToken: null,
-  fetchingUser: false,
-  fetchingSongs: false,
-  user: null,
-  songs: [],
-};
+const fetchingUser = createReducer(false, {
+  [FETCH_USER]: () => true,
+  [RECEIVE_USER]: () => false,
+});
 
-export default function reduce(state = initialState, action) {
-  switch (action.type) {
+const user = createReducer(null, {
+  [RECEIVE_USER]: (_, action) => action.user,
+});
 
-    case SET_TOKEN:
-      const { accessToken } = action;
-      return {
-        ...state,
-        accessToken,
-      };
+const accessToken = createReducer(null, {
+  [SET_TOKEN]: (_, action) => action.accessToken,
+});
 
-    case FETCH_USER:
-      return {
-        ...state,
-        fetchingUser: true,
-      };
+const songs = createReducer([], {
+  [RECEIVE_SONGS]: (songs, action) => [...songs, ...action.songs],
+});
 
-    case RECEIVE_USER:
-      const { user } = action;
-      return {
-        ...state,
-        fetchingUser: false,
-        user,
-      };
+const fetchingSongs = createReducer(false, {
+  [FETCH_SONGS]: () => true,
+  [END_FETCH_SONGS]: () => false,
+});
 
-    case FETCH_SONGS:
-      return {
-        ...state,
-        fetchingSongs: true,
-      };
+export default combineReducers({
+  fetchingUser,
+  accessToken,
+  user,
+  songs,
+  fetchingSongs,
+});
 
-    case RECEIVE_SONGS:
-      const { songs } = action;
-      return {
-        ...state,
-        songs: [...state.songs, ...songs],
-      };
-
-    case END_FETCH_SONGS:
-      return {
-        ...state,
-        fetchingSongs: false,
-      };
-
-    default:
-      return state;
-
-  }
+function createReducer(initialState, handlers) {
+  return (state = initialState, action) => (
+    handlers.hasOwnProperty(action.type) ?
+      handlers[action.type](state, action) :
+      state
+  );
 }
