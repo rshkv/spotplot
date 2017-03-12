@@ -39,23 +39,25 @@ export default class Network extends Component {
       });
   }
 
+  // Am I missing the first batch of songs?
   shouldComponentUpdate(nextProps) {
-    const { songs, onHover } = nextProps;
+    const { network, onHover, onClick } = nextProps;
 
     const nodes = this.g.selectAll('.node')
-      .data(songs, s => s.id);
+      .data(network.nodes, n => n.id);
 
     nodes.enter().append('circle')
       .classed('node', true)
       .attr('r', d => Math.sqrt(d.popularity))
       .on('mouseover', onHover)
+      .on('click', onClick)
       .style('fill-opacity', 0)
       .transition()
       .duration((d, i) => (i % 50) * 10)
       .style('fill-opacity', 1);
 
     this.simulation
-      .nodes(songs)
+      .nodes(network.nodes)
       .alpha(1).restart();
 
     return false;

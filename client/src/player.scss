@@ -26,26 +26,24 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
 
     .play-button {
       margin-right: 10px;
-
       border-radius: 500px;
       border: 1px solid $font-pale;
-      transition: all 0.2s;
+      transition: background-color 0.2s;
       &:hover {
         border-color: $light-green;
         background-color: $light-green;
       }
 
+      // Play/Pause images
       background-repeat: no-repeat;
       background-color: transparent;
       width: 36px;
       height: 36px;
       background-size: 14px;
-
       &.paused {
         background-image: $play;
         background-position: 57% 50%;
       }
-
       &.playing {
         background-image: $pause; 
         background-position: 51% 50%;
@@ -55,21 +53,17 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
     .info {
       min-width: 0px;
       font-size: 14px;
-
       >* {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
       }
-
       .track-name { 
         color: $font;
       }
-
       .track-artists { 
         color: $font-pale;
       }
     }
   }
-
 }

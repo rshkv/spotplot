@@ -21,8 +21,13 @@ const accessToken = createReducer(null, {
   [SET_TOKEN]: (_, action) => action.accessToken,
 });
 
-const songs = createReducer([], {
-  [RECEIVE_SONGS]: (songs, action) => [...songs, ...action.songs],
+const network = createReducer({ nodes: [], links: [] }, {
+  [RECEIVE_SONGS](network, action) {
+    return {
+      nodes: [...network.nodes, ...action.songs],
+      links: [],
+    };
+  },
 });
 
 const fetchingSongs = createReducer(false, {
@@ -34,7 +39,7 @@ export default combineReducers({
   fetchingUser,
   accessToken,
   user,
-  songs,
+  network,
   fetchingSongs,
 });
 
