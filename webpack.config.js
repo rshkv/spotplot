@@ -11,23 +11,16 @@ module.exports = {
     filename: 'bundle.js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js/,
+        include: SRC_DIR,
         loader: 'babel-loader',
+      }, {
+        test: /\.scss$/,
         include: SRC_DIR,
-      },
-      {
-        test: /\.less$/,
-        include: SRC_DIR,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader!less-loader',
-        }),
+        loader: 'style-loader!css-loader!sass-loader',
       },
     ],
   },
-  plugins: [
-    new ExtractTextPlugin('style.css'),
-  ],
 };

@@ -1,3 +1,10 @@
+$light-green: #1bd85e;
+$green: #1db954;
+$font: #fff;
+$font-pale: #a0a0a0;
+$dark-grey: #282828; 
+$black: #181818;
+
 * {
     font-family: 'proxima_nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #FFF;
@@ -6,7 +13,7 @@
 }
 
 body {
-    background: #1c1c1f;
+    background: $black;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -53,7 +60,7 @@ body {
 }
 
 .network .node {
-    fill: #1DB954;
+    fill: $green;
 }
 
 .songs {

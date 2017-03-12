@@ -1,0 +1,75 @@
+@import 'main';
+
+$cover: 250px;
+$play: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTIyNiAxNDgxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDEzOTRWODdDMCA0Ni4zIDEzLjMgMTkuOCA0MCA3LjUgNjYuNy00LjggOTguNy4zIDEzNiAyM2wxMDM0IDYzNGMzNy4zIDIyLjcgNTYgNTAuMyA1NiA4M3MtMTguNyA2MC4zLTU2IDgzTDEzNiAxNDU4Yy0zNy4zIDIyLjctNjkuMyAyNy44LTk2IDE1LjUtMjYuNy0xMi4zLTQwLTM4LjgtNDAtNzkuNXoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=);
+$pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yNTIgMEgxMjZDOTEuMyAwIDYxLjcgMTIuMyAzNyAzNyAxMi4zIDYxLjcgMCA5MS4zIDAgMTI2djEyNjBjMCAzNC43IDEyLjMgNjQuMyAzNyA4OSAyNC43IDI0LjcgNTQuMyAzNyA4OSAzN2gxMjZjMzQuNyAwIDY0LjMtMTIuMyA4OS0zNyAyNC43LTI0LjcgMzctNTQuMyAzNy04OVYxMjZjMC0zNC43LTEyLjMtNjQuMy0zNy04OS0yNC43LTI0LjctNTQuMy0zNy04OS0zN3ptODgyIDBoLTEyNmMtMzQuNyAwLTY0LjMgMTIuMy04OSAzNy0yNC43IDI0LjctMzcgNTQuMy0zNyA4OXYxMjYwYzAgMzQuNyAxMi4zIDY0LjMgMzcgODkgMjQuNyAyNC43IDU0LjMgMzcgODkgMzdoMTI2YzM0LjcgMCA2NC4zLTEyLjMgODktMzcgMjQuNy0yNC43IDM3LTU0LjMgMzctODlWMTI2YzAtMzQuNy0xMi4zLTY0LjMtMzctODktMjQuNy0yNC43LTU0LjMtMzctODktMzd6IiBmaWxsPSIjZmZmIi8+PC9zdmc+);
+
+.player {
+  display: flex;
+  flex-direction: column;
+
+  img {
+    width: $cover;
+    height: $cover;
+  }
+
+ .main {
+    padding: 6px 10px;
+    box-sizing: border-box;
+    width: $cover;
+    height: 60px;
+    background: $dark-grey;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    .play-button {
+      margin-right: 10px;
+
+      border-radius: 500px;
+      border: 1px solid $font-pale;
+      transition: all 0.2s;
+      &:hover {
+        border-color: $light-green;
+        background-color: $light-green;
+      }
+
+      background-repeat: no-repeat;
+      background-color: transparent;
+      width: 36px;
+      height: 36px;
+      background-size: 14px;
+
+      &.paused {
+        background-image: $play;
+        background-position: 57% 50%;
+      }
+
+      &.playing {
+        background-image: $pause; 
+        background-position: 51% 50%;
+      }
+    }
+
+    .info {
+      min-width: 0px;
+      font-size: 14px;
+
+      >* {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .track-name { 
+        color: $font;
+      }
+
+      .track-artists { 
+        color: $font-pale;
+      }
+    }
+  }
+
+}
