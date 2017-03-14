@@ -2,33 +2,18 @@ import Spotify from 'spotify-web-api-js';
 const spotifyApi = new Spotify();
 
 export const SET_TOKEN = 'SET_TOKEN';
-export const FETCH_USER = 'FETCH_USER';
-export const RECEIVE_USER = 'RECEIVE_USER';
 export const FETCH_SONGS = 'FETCH_SONGS';
 export const RECEIVE_SONGS = 'RECEIVE_SONGS';
 export const END_FETCH_SONGS = 'END_FETCH_SONGS';
 
 export function setToken(accessToken) {
-  spotifyApi.setAccessToken(accessToken);
   return { type: SET_TOKEN, accessToken };
 }
 
-export function fetchUser() {
-  return (dispatch) => {
-    dispatch({ type: FETCH_USER });
-    spotifyApi.getMe()
-      .then(data => {
-        dispatch({ type: RECEIVE_USER, user: data });
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  };
-}
+export function fetchSongs(accessToken) {
+  spotifyApi.setAccessToken(accessToken);
 
-export function fetchSongs() {
   return (dispatch) => {
-
     const fetch = (next) => {
       ((next) ? spotifyApi.getGeneric(next) : spotifyApi.getMySavedTracks({ limit: 50 }))
         .then(data => {

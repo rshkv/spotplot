@@ -7,7 +7,7 @@ export default class Network extends Component {
   render() {
     return (
       <svg width="100%" height="100%">
-        <g ref="network"/>
+        <g ref="network" />
       </svg>
     );
   }
@@ -39,7 +39,6 @@ export default class Network extends Component {
       });
   }
 
-  // Am I missing the first batch of songs?
   shouldComponentUpdate(nextProps) {
     const { network, onHover, onClick } = nextProps;
 
@@ -63,4 +62,3 @@ export default class Network extends Component {
     return false;
   }
 }
-

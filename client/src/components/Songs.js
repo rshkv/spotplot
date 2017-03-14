@@ -15,8 +15,8 @@ class Songs extends Component {
   }
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchSongs());
+    const { dispatch, accessToken } = this.props;
+    dispatch(fetchSongs(accessToken));
   }
 
   render() {
@@ -27,7 +27,7 @@ class Songs extends Component {
       this.setState({ selectedTrack: d });
     };
 
-    const togglePlaying = () => {
+    const togglePlaying = () =>{
       this.setState({ playing: !this.state.playing, });
     };
 
@@ -45,4 +45,6 @@ class Songs extends Component {
   }
 }
 
-export default connect(({ fetchingSongs, network }) => ({ fetchingSongs, network }))(Songs);
+export default connect(({ fetchingSongs, network, accessToken }) => (
+  { fetchingSongs, network, accessToken }
+))(Songs);

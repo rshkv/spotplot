@@ -1,21 +1,10 @@
 import { combineReducers } from 'redux';
 import {
   SET_TOKEN,
-  FETCH_USER,
-  RECEIVE_USER,
   FETCH_SONGS,
   RECEIVE_SONGS,
   END_FETCH_SONGS
 } from './actions';
-
-const fetchingUser = createReducer(false, {
-  [FETCH_USER]: () => true,
-  [RECEIVE_USER]: () => false,
-});
-
-const user = createReducer(null, {
-  [RECEIVE_USER]: (_, action) => action.user,
-});
 
 const accessToken = createReducer(null, {
   [SET_TOKEN]: (_, action) => action.accessToken,
@@ -36,9 +25,7 @@ const fetchingSongs = createReducer(false, {
 });
 
 export default combineReducers({
-  fetchingUser,
   accessToken,
-  user,
   network,
   fetchingSongs,
 });
