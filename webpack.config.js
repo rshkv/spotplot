@@ -1,5 +1,4 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const SRC_DIR = path.resolve(__dirname, 'client/src');
 const DIST_DIR = path.resolve(__dirname, 'client/public');
@@ -10,6 +9,7 @@ module.exports = {
     path: DIST_DIR,
     filename: 'bundle.js',
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
