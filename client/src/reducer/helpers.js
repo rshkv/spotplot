@@ -2,14 +2,17 @@ import * as _ from 'lodash';
 
 
 export function linkArtist(tracks) {
-    const accumulator = ({ nodes, links }, track) => {
+    const accumulator = ({ artists, links }, track) => {
         links.push(...track.artists.map(a => ({ source: track.id, target: a.id })));
-        nodes.push(...track.artists);
-        return { nodes, links };
+        artists.push(...track.artists);
+        return { artists, links };
     };
-    const { nodes, links } = tracks.reduce(accumulator, { nodes: [], links: [] });
+    const { artists, links } = tracks.reduce(
+        accumulator,
+        { artists: [], links: [] }
+    );
     return {
-        nodes: _.uniqBy(nodes, n => n.id),
+        artists: _.uniqBy(artists, n => n.id),
         links: _.uniqBy(links, l => l.source + l.target),
     }
 }

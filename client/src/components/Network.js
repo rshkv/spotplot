@@ -41,9 +41,10 @@ export default class Network extends Component {
 
   shouldComponentUpdate(nextProps) {
     const { network, onHover, onClick } = nextProps;
+    const { tracks, artists, links } = network;
 
     const nodes = this.g.selectAll('.node')
-      .data(network.nodes, n => n.id);
+      .data(tracks, n => n.id);
 
     nodes.enter().append('circle')
       .classed('node', true)
@@ -56,7 +57,7 @@ export default class Network extends Component {
       .style('fill-opacity', 1);
 
     this.simulation
-      .nodes(network.nodes)
+      .nodes(tracks)
       .alpha(1).restart();
 
     return false;

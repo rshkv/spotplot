@@ -1,8 +1,9 @@
 import { SpotifyGraphQLClient } from 'spotify-graphql';
+import { tracks } from './data';
 
 export const SET_TOKEN = 'SET_TOKEN';
-export const FETCH_SONGS = 'FETCH_SONGS';
-export const RECEIVE_SONGS = 'RECEIVE_SONGS';
+export const FETCH_TRACKS = 'FETCH_SONGS';
+export const RECEIVE_TRACKS = 'RECEIVE_SONGS';
 
 const spotify = SpotifyGraphQLClient;
 
@@ -12,7 +13,7 @@ export function setToken(accessToken) {
 
 export function fetchSongs(accessToken) {
   return (dispatch) => {
-    dispatch({ type: FETCH_SONGS });
+    dispatch({ type: FETCH_TRACKS });
 
     spotify({ accessToken })
       .query(fetchSongsQuery)
@@ -22,8 +23,8 @@ export function fetchSongs(accessToken) {
             console.error(e.message);
           });
         } else {
-          const songs = result.data.me.tracks.map(t => t.track);
-          dispatch({ type: RECEIVE_SONGS, songs });
+          const tracks = result.data.me.tracks.map(t => t.track);
+          dispatch({ type: RECEIVE_TRACKS, tracks });
         }
       });
   };
@@ -37,12 +38,14 @@ const fetchSongsQuery = `
         id
         uri
         name
+        type
         preview_url
         popularity
         artists {
           id
           uri
           name
+          type
         }
         album {
           images {
