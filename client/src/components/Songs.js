@@ -27,7 +27,7 @@ class Songs extends Component {
       this.setState({ selectedTrack: d });
     };
 
-    const togglePlaying = () =>{
+    const togglePlaying = () => {
       this.setState({ playing: !this.state.playing, });
     };
 

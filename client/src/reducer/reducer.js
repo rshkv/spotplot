@@ -3,7 +3,6 @@ import {
   SET_TOKEN,
   FETCH_SONGS,
   RECEIVE_SONGS,
-  END_FETCH_SONGS
 } from './actions';
 
 const accessToken = createReducer(null, {
@@ -21,7 +20,7 @@ const network = createReducer({ nodes: [], links: [] }, {
 
 const fetchingSongs = createReducer(false, {
   [FETCH_SONGS]: () => true,
-  [END_FETCH_SONGS]: () => false,
+  [RECEIVE_SONGS]: () => false,
 });
 
 export default combineReducers({
