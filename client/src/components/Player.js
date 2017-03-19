@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import Sound from 'react-sound';
+import Progress from './Progress';
 import './Player.scss';
 
 export default class Player extends Component {
 
   constructor() {
     super();
-    this.state = { loaded: false };
+    this.state = {
+      loaded: false,
+      progress: 0.0,
+    };
   }
 
   // Unset `laoded` if a new track is loaded
@@ -14,29 +18,27 @@ export default class Player extends Component {
     const { loaded } = this.state;
     const { track } = this.props;
     const nextTrack = nextProps.track;
-    this.setState({ loaded: loaded && track.id === nextTrack.id });
+    if (track.id !== nextTrack.id) {
+      this.setState({
+        loaded: loaded && track.id === nextTrack.id,
+        progress: 0.0,
+      });
+    }
   }
 
   render() {
     const { track, playing, togglePlaying } = this.props;
-    const { loading, loaded } = this.state;
+    const { loaded, progress } = this.state;
 
     const size = { width: 250, height: 330, };
     const trackName = track.name;
     const trackArtists = track.artists.map(a => a.name).join(', ');
     const imgUrl = track.album.images[1].url;
 
-    const onLoading = ({ loaded }) => {
-      this.setState({ loaded });
+    const onLoading = ({ loaded, bytesLoaded }) => {
+      this.setState({ loaded, progress: bytesLoaded });
     };
 
-    if (track.preview_url === null) {
-      console.error('Encountered null track url');
-      console.error(track);
-    }
-
-    // TODO: Show loading progress
-    // https://github.com/leoasis/react-sound/issues/20
     return (
       <div className="player">
         <div className="main">
@@ -50,6 +52,7 @@ export default class Player extends Component {
             <div className="track-name">{trackName}</div>
             <div className="track-artists">{trackArtists}</div>
           </div>
+          {!loaded && <Progress parent={'.player'} progress={progress} />}
         </div>
         <img src={imgUrl} />
         <Sound

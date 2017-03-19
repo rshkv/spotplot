@@ -37,7 +37,9 @@ class Songs extends Component {
         <div className="network">
           <Network network={network} onHover={onHover} onClick={togglePlaying} />
         </div>
-        {selectedTrack && <Player track={selectedTrack} playing={playing} togglePlaying={togglePlaying} />}
+        {selectedTrack &&
+          <Player track={selectedTrack} playing={playing} togglePlaying={togglePlaying} />
+        }
         <div className="songs">
           {fetchingSongs && <p className="subtitle">Loading songs...</p>}
           {fetchingSongs && <Progress />}

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import './Network.scss';
 
-
 export default class Network extends Component {
 
   constructor() {
@@ -35,22 +34,23 @@ export default class Network extends Component {
 
     const collideForce = d3.forceCollide()
       .radius(d => ((d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)) + 1)
-      .iterations(2)
+      .iterations(2);
 
-    const xForce = d3.forceX().strength(0.05)
+    const xForce = d3.forceX().strength(0.05);
 
-    const yForce = d3.forceY().strength(0.05)
+    const yForce = d3.forceY().strength(0.05);
 
     const chargeForce = d3.forceManyBody()
-      .strength(d => (d.type === 'artist') ? -30 : 0)
+      .strength(d => (d.type === 'artist') ? -30 : 0);
 
     const tick = () => {
       this.g.selectAll('.node')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
-    }
+    };
 
     this.simulation = d3.forceSimulation()
+      .alphaDecay(0.006)
       .force('link', linkForce)
       .force('collide', collideForce)
       .force('x', xForce)
@@ -71,13 +71,13 @@ export default class Network extends Component {
       .style('fill-opacity', 0)
       .transition()
       .duration((d, i) => (i % 50) * 10)
-      .style('fill-opacity', 1)
+      .style('fill-opacity', 1);
 
     this.g.selectAll('.track.node')
       .attr('r', this.trackRadius)
       .on('mouseover', function (d) {
         d3.selectAll('.node').classed('selected', false);
-        d3.select(this).classed('selected', true)
+        d3.select(this).classed('selected', true);
         onHover(d);
       })
       .on('click', onClick);
@@ -87,11 +87,11 @@ export default class Network extends Component {
       .on('mouseover', d => { console.log(d.name); });
 
     this.simulation
-      .nodes(combinedNodes)
+      .nodes(combinedNodes);
 
     this.simulation
       .force('link')
-      .links(links)
+      .links(links);
 
     return false;
   }
