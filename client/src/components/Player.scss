@@ -9,8 +9,8 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
   flex-direction: column;
 
   img {
-    width: $cover;
-    height: $cover;
+    max-width: $cover;
+    max-height: $cover;
   }
 
  .main {
@@ -29,7 +29,7 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
       border-radius: 500px;
       border: 1px solid $font-pale;
       transition: background-color 0.2s;
-      &:hover {
+      &:hover, &.playing {
         border-color: $light-green;
         background-color: $light-green;
       }

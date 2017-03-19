@@ -4,17 +4,30 @@ import './Player.scss';
 
 export class Player extends Component {
 
+  constructor() {
+    super();
+    this.state = { loaded: false };
+  }
+
+  // Unset `laoded` if a new track is loaded
+  componentWillReceiveProps(nextProps) {
+    const { loaded } = this.state;
+    const { track } = this.props;
+    const nextTrack = nextProps.track;
+    this.setState({ loaded: loaded && track.id === nextTrack.id });
+  }
+
   render() {
     const { track, playing, togglePlaying } = this.props;
+    const { loading, loaded } = this.state;
 
     const size = { width: 250, height: 330, };
     const trackName = track.name;
     const trackArtists = track.artists.map(a => a.name).join(', ');
     const imgUrl = track.album.images[1].url;
 
-    const onLoading = (bytesLoaded, bytesTotal, duration) => {
-      console.log('loading...');
-      console.log({ ...bytesLoaded });
+    const onLoading = ({ loaded }) => {
+      this.setState({ loaded });
     };
 
     if (track.preview_url === null) {
@@ -41,7 +54,7 @@ export class Player extends Component {
         <img src={imgUrl} />
         <Sound
           url={track.preview_url}
-          playStatus={playing ? Sound.status.PLAYING : Sound.status.STOPPED}
+          playStatus={!loaded || (playing && loaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
           onFinishedPlaying={togglePlaying}
           volume={80}
           onLoading={onLoading}
