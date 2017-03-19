@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sound from 'react-sound';
 import './Player.scss';
 
-export class Player extends Component {
+export default class Player extends Component {
 
   constructor() {
     super();

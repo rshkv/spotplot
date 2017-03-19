@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchSongs } from '../reducer/actions';
 import Network from './Network';
-import { Player, OldPlayer } from './Player';
+import Player from './Player';
+import Progress from './Progress';
 
 class Songs extends Component {
 
@@ -39,6 +40,7 @@ class Songs extends Component {
         {selectedTrack && <Player track={selectedTrack} playing={playing} togglePlaying={togglePlaying} />}
         <div className="songs">
           {fetchingSongs && <p className="subtitle">Loading songs...</p>}
+          {fetchingSongs && <Progress />}
         </div>
       </div>
     );

@@ -17,12 +17,13 @@ module.exports = {
     rules: [
       {
         test: /\.js/,
-        include: SRC_DIR,
         loader: 'babel-loader',
       }, {
         test: /\.scss$/,
-        include: SRC_DIR,
         loader: 'style-loader!css-loader!sass-loader',
+      }, {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
       },
     ],
   },
