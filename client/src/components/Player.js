@@ -13,7 +13,7 @@ export default class Player extends Component {
     };
   }
 
-  // Unset `laoded` if a new track is loaded
+  // Unset `loaded` if a new track is loaded
   componentWillReceiveProps(nextProps) {
     const { loaded } = this.state;
     const { track } = this.props;
