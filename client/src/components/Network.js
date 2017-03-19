@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
+import './Network.scss';
+
 
 export default class Network extends Component {
 
@@ -60,9 +62,7 @@ export default class Network extends Component {
   shouldComponentUpdate(nextProps) {
     const { network, onHover, onClick } = nextProps;
     const { tracks, artists, links } = network;
-
     const combinedNodes = [...artists, ...tracks];
-
 
     this.g.selectAll('.node')
       .data(combinedNodes)
@@ -75,7 +75,11 @@ export default class Network extends Component {
 
     this.g.selectAll('.track.node')
       .attr('r', this.trackRadius)
-      .on('mouseover', onHover)
+      .on('mouseover', function (d) {
+        d3.selectAll('.node').classed('selected', false);
+        d3.select(this).classed('selected', true)
+        onHover(d);
+      })
       .on('click', onClick);
 
     this.g.selectAll('.artist.node')
@@ -88,9 +92,6 @@ export default class Network extends Component {
     this.simulation
       .force('link')
       .links(links)
-
-    this.simulation
-      .alpha(1).restart();
 
     return false;
   }
