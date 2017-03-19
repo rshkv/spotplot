@@ -13,16 +13,22 @@ export default class Player extends Component {
     };
   }
 
-  // Unset `loaded` if a new track is loaded
   componentWillReceiveProps(nextProps) {
     const { loaded } = this.state;
     const { track } = this.props;
     const nextTrack = nextProps.track;
+
+    // Unset `loaded` if a new track is loaded
     if (track.id !== nextTrack.id) {
       this.setState({
         loaded: loaded && track.id === nextTrack.id,
         progress: 0.0,
       });
+    }
+
+    // Check if track has `preview_url`
+    if (track.preview_url === null) {
+      console.error('Encountered null track url', track);
     }
   }
 
@@ -43,25 +49,31 @@ export default class Player extends Component {
       <div className="player">
         <div className="main">
           <div>
-            <button
-              className={`play-button ${playing ? 'playing' : 'paused'}`}
-              onClick={togglePlaying}
-            />
+            {track.preview_url &&
+              <button
+                className={`play-button ${playing ? 'playing' : 'paused'}`}
+                onClick={togglePlaying}
+              />
+            }
           </div>
           <div className="info">
             <div className="track-name">{trackName}</div>
             <div className="track-artists">{trackArtists}</div>
           </div>
-          {!loaded && <Progress parent={'.player'} progress={progress} />}
         </div>
         <img src={imgUrl} />
-        <Sound
-          url={track.preview_url}
-          playStatus={!loaded || (playing && loaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
-          onFinishedPlaying={togglePlaying}
-          volume={80}
-          onLoading={onLoading}
-        />
+        {!loaded && track.preview_url &&
+          <Progress parent={'.player'} progress={progress} />
+        }
+        {track.preview_url &&
+          <Sound
+            url={track.preview_url}
+            playStatus={!loaded || (playing && loaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
+            onFinishedPlaying={togglePlaying}
+            volume={80}
+            onLoading={onLoading}
+          />
+        }
       </div>
     );
   }

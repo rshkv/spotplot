@@ -15,7 +15,7 @@ export default class Progress extends Component {
 
   componentDidMount() {
     const { parent, progress } = this.props;
-    console.log(`Progress ${progress}`);
+
     NProgress.configure({
       showSpinner: false,
       parent: parent || 'body',
@@ -23,7 +23,6 @@ export default class Progress extends Component {
       trickle: (progress === undefined) ? true : false,
     });
     NProgress.start();
-
     if (progress) NProgress.set(progress);
   }
 
