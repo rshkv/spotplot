@@ -57,9 +57,10 @@ body {
 
 #nprogress {
   .bar {
-      background: $green;
+    background: $green;
+    box-shadow: none;
   }
   .peg {
-    box-shadow: 0 0 10px $light-green, 0 0 5px $light-green;
+    box-shadow: none;
   }
 }
