@@ -1,5 +1,6 @@
-$light-green: #1bd85e;
-$green: #1db954;
+$light-green: #15d85e;
+$green: #19b954;
+$blue: #4686d5;
 $font: #fff;
 $font-pale: #a0a0a0;
 $dark-grey: #282828; 
@@ -50,11 +51,18 @@ body {
 .network {
     width: 100%;
     height: 100%;
+
+    .node {
+        &.artist {
+            fill: $blue;
+        }
+        &.track {
+            fill: $green;
+        }
+    }
 }
 
-.network .node {
-    fill: $green;
-}
+
 
 .songs {
     position: absolute;

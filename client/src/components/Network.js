@@ -4,6 +4,12 @@ import * as d3 from 'd3';
 
 export default class Network extends Component {
 
+  constructor() {
+    super();
+    this.artistRadius = () => 1;
+    this.trackRadius = (d) => Math.sqrt(d.popularity);
+  }
+
   render() {
     return (
       <svg width="100%" height="100%">
@@ -21,43 +27,69 @@ export default class Network extends Component {
     this.g = d3.select(g)
       .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
+    const linkForce = d3.forceLink()
+      .id(d => d.id)
+      .distance(l => 1 + this.trackRadius(l.source) + this.artistRadius(l.target));
+
+    const collideForce = d3.forceCollide()
+      .radius(d => ((d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)) + 1)
+      .iterations(2)
+
+    const xForce = d3.forceX().strength(0.05)
+
+    const yForce = d3.forceY().strength(0.05)
+
+    const chargeForce = d3.forceManyBody()
+      .strength(d => (d.type === 'artist') ? -30 : 0)
+
+    const tick = () => {
+      this.g.selectAll('.node')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y);
+    }
+
     this.simulation = d3.forceSimulation()
-      .alphaDecay(0.01)
-      .force('collide', d3.forceCollide()
-        .radius(d => Math.sqrt(d.popularity) + 1)
-        .iterations(2))
-      .force('x', d3.forceX().strength(0.001))
-      .force('y', d3.forceY().strength(0.001))
-      .force('charge', d3.forceManyBody()
-        .strength(d => 0.3)
-        .distanceMin(20)
-        .distanceMax(200))
-      .on('tick', () => {
-        this.g.selectAll('.node')
-          .attr('cx', d => d.x)
-          .attr('cy', d => d.y);
-      });
+      .force('link', linkForce)
+      .force('collide', collideForce)
+      .force('x', xForce)
+      .force('y', yForce)
+      .force('charge', chargeForce)
+      .on('tick', tick);
   }
 
   shouldComponentUpdate(nextProps) {
     const { network, onHover, onClick } = nextProps;
     const { tracks, artists, links } = network;
 
-    const nodes = this.g.selectAll('.node')
-      .data(tracks, n => n.id);
+    const combinedNodes = [...artists, ...tracks];
 
-    nodes.enter().append('circle')
-      .classed('node', true)
-      .attr('r', d => Math.sqrt(d.popularity))
-      .on('mouseover', onHover)
-      .on('click', onClick)
+
+    this.g.selectAll('.node')
+      .data(combinedNodes)
+      .enter().append('circle')
+      .attr('class', d => `node ${d.type}`)
       .style('fill-opacity', 0)
       .transition()
       .duration((d, i) => (i % 50) * 10)
-      .style('fill-opacity', 1);
+      .style('fill-opacity', 1)
+
+    this.g.selectAll('.track.node')
+      .attr('r', this.trackRadius)
+      .on('mouseover', onHover)
+      .on('click', onClick);
+
+    this.g.selectAll('.artist.node')
+      .attr('r', this.artistRadius)
+      .on('mouseover', d => { console.log(d.name); });
 
     this.simulation
-      .nodes(tracks)
+      .nodes(combinedNodes)
+
+    this.simulation
+      .force('link')
+      .links(links)
+
+    this.simulation
       .alpha(1).restart();
 
     return false;
