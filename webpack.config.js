@@ -9,7 +9,9 @@ module.exports = {
     path: DIST_DIR,
     filename: 'bundle.js',
   },
-  devtool: 'source-map',
+
+  // Adding source maps will slow down Webpack
+  // devtool: 'source-map',
   resolve: {
     alias: { soundmanager2: 'soundmanager2/script/soundmanager2-nodebug-jsmin.js' },
   },

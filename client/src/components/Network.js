@@ -1,39 +1,38 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
-import './Network.scss';
+import colors from '!!sass-variable-loader!../main.scss';
 
 export default class Network extends Component {
 
   constructor() {
     super();
+    this.state = { selectedNode: null };
     this.artistRadius = () => 1;
     this.trackRadius = (d) => Math.sqrt(d.popularity);
-  }
-
-  render() {
-    return (
-      <svg width="100%" height="100%">
-        <g ref="network" />
-      </svg>
+    this.radius = (d) => (
+      (d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)
     );
   }
 
-  componentDidMount() {
-    const g = ReactDOM.findDOMNode(this.refs.network);
-    const svg = d3.select(g.parentNode);
-    const width = parseInt(svg.style('width'), 10);
-    const height = parseInt(svg.style('height'), 10);
+  render() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-    this.g = d3.select(g)
-      .attr('transform', `translate(${width / 2}, ${height / 2})`);
+    return <canvas ref="network" width={width} height={height} />;
+  }
+
+  componentDidMount() {
+    const { onSelect, onClick } = this.props;
+    const canvas = ReactDOM.findDOMNode(this.refs.network);
+    const { width, height } = canvas;
 
     const linkForce = d3.forceLink()
       .id(d => d.id)
       .distance(l => 1 + this.trackRadius(l.source) + this.artistRadius(l.target));
 
     const collideForce = d3.forceCollide()
-      .radius(d => ((d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)) + 1)
+      .radius(d => this.radius(d) + 1)
       .iterations(2);
 
     const xForce = d3.forceX().strength(0.05);
@@ -43,7 +42,7 @@ export default class Network extends Component {
     const chargeForce = d3.forceManyBody()
       .strength(d => (d.type === 'artist') ? -30 : 0);
 
-    const tick = () => {
+    const ticked = () => {
       this.g.selectAll('.node')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
@@ -55,44 +54,86 @@ export default class Network extends Component {
       .force('collide', collideForce)
       .force('x', xForce)
       .force('y', yForce)
-      .force('charge', chargeForce)
-      .on('tick', tick);
+      .force('charge', chargeForce);
+
+    const nodeUnderMouse = (event) => {
+      const x = event.x - width / 2;
+      const y = event.y - height / 2;
+      const closestNode = this.simulation.find(x, y);
+
+      const isUnderMouse = (node) => {
+        const sqNodeRadius = Math.pow(this.radius(node), 2);
+        const sqDiffX = Math.pow(x - node.x, 2);
+        const sqDiffY = Math.pow(y - node.y, 2);
+        return (sqDiffX + sqDiffY) <= sqNodeRadius;
+      };
+
+      return (isUnderMouse(closestNode) && closestNode);
+    };
+
+    d3.select(canvas)
+      .on('mousemove', () => {
+        const node = nodeUnderMouse(d3.event);
+        if (node && node !== this.selectedNode) {
+          this.setState({ selectedNode: node });
+          onSelect(node);
+        }
+      })
+      .on('click', () => {
+        const node = nodeUnderMouse(d3.event);
+        if (node) onClick(this.selectedNode);
+      });
+
   }
 
-  shouldComponentUpdate(nextProps) {
-    const { network, onHover, onClick } = nextProps;
+  shouldComponentUpdate(nextProps, nextState) {
+    const { network, onClick } = nextProps;
+    const { selectedNode } = nextState;
     const { tracks, artists, links } = network;
-    const combinedNodes = [...artists, ...tracks];
+    const nodes = [...tracks, ...artists];
+    const ctx = ReactDOM.findDOMNode(this.refs.network)
+      .getContext('2d');
+    const { width, height } = ctx.canvas;
 
-    this.g.selectAll('.node')
-      .data(combinedNodes)
-      .enter().append('circle')
-      .attr('class', d => `node ${d.type}`)
-      .style('fill-opacity', 0)
-      .transition()
-      .duration((d, i) => (i % 50) * 10)
-      .style('fill-opacity', 1);
+    const drawNode = (d) => {
+      ctx.moveTo(d.x, d.y);
+      ctx.arc(d.x, d.y, this.radius(d), 0, 2 * Math.PI);
+    };
 
-    this.g.selectAll('.track.node')
-      .attr('r', this.trackRadius)
-      .on('mouseover', function (d) {
-        d3.selectAll('.node').classed('selected', false);
-        d3.select(this).classed('selected', true);
-        onHover(d);
-      })
-      .on('click', onClick);
+    const drawNetwork = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.save();
+      ctx.translate(width / 2, height / 2);
 
-    this.g.selectAll('.artist.node')
-      .attr('r', this.artistRadius)
-      .on('mouseover', d => { console.log(d.name); });
+      ctx.fillStyle = colors.green;
+      ctx.beginPath();
+      tracks.forEach(drawNode);
+      ctx.fill();
+
+      ctx.fillStyle = colors.blue;
+      ctx.beginPath();
+      artists.forEach(drawNode);
+      ctx.fill();
+
+      if (selectedNode) {
+        ctx.fillStyle = colors.lightGreen;
+        ctx.beginPath();
+        drawNode(selectedNode);
+        ctx.fill();
+      };
+
+      ctx.restore();
+    };
 
     this.simulation
-      .nodes(combinedNodes);
+      .nodes(nodes)
+      .on('tick', drawNetwork);
 
     this.simulation
       .force('link')
       .links(links);
 
+    drawNetwork();
     return false;
   }
 }

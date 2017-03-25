@@ -24,8 +24,10 @@ class Songs extends Component {
     const { network, fetchingSongs } = this.props;
     const { playing, selectedTrack } = this.state;
 
-    const onHover = (d) => {
-      this.setState({ selectedTrack: d });
+    const onSelect = (d) => {
+      if (d.type === 'track') {
+        this.setState({ selectedTrack: d });
+      }
     };
 
     const togglePlaying = () => {
@@ -35,7 +37,7 @@ class Songs extends Component {
     return (
       <div className="container">
         <div className="network">
-          <Network network={network} onHover={onHover} onClick={togglePlaying} />
+          <Network network={network} onSelect={onSelect} onClick={togglePlaying} />
         </div>
         {selectedTrack &&
           <Player track={selectedTrack} playing={playing} togglePlaying={togglePlaying} />
