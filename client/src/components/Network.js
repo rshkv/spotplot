@@ -8,7 +8,7 @@ export default class Network extends Component {
   constructor() {
     super();
     this.state = { selectedNode: null };
-    this.artistRadius = () => 1;
+    this.artistRadius = () => 2;
     this.trackRadius = (d) => Math.sqrt(d.popularity) + 1;
     this.radius = (d) => (
       (d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)
@@ -35,12 +35,12 @@ export default class Network extends Component {
     const collideForce = d3.forceCollide()
       .radius(d => this.radius(d) + 1);
 
-    const xForce = d3.forceX().strength(0.05);
+    const xForce = d3.forceX().strength(0.06);
 
-    const yForce = d3.forceY().strength(0.05);
+    const yForce = d3.forceY().strength(0.06);
 
     const chargeForce = d3.forceManyBody()
-      .strength(d => (d.type === 'artist') ? -30 : 0);
+      .strength(d => (d.type === 'artist') ? -35 : -10);
 
     this.simulation = d3.forceSimulation()
       .alphaDecay(0.006)
@@ -69,7 +69,7 @@ export default class Network extends Component {
       .on('mousemove', () => {
         const node = nodeUnderMouse();
         if (node && node !== this.selectedNode) {
-          this.setState({ selectedNode: node });
+          if (node.type === 'track') this.setState({ selectedNode: node });
           onSelect(node);
         }
       })
@@ -105,7 +105,7 @@ export default class Network extends Component {
       ctx.scale(this.transform.k, this.transform.k);
       ctx.translate(width / 2, height / 2);
 
-      ctx.strokeStyle = colors.green;
+      ctx.strokeStyle = colors.blue;
       ctx.beginPath();
       links.forEach(drawLine);
       ctx.stroke();
@@ -122,6 +122,8 @@ export default class Network extends Component {
 
       if (selectedNode) {
         ctx.fillStyle = colors.lightGreen;
+        ctx.shadowColor = colors.green;
+        ctx.shadowBlur = 20;
         ctx.beginPath();
         drawNode(selectedNode);
         ctx.fill();
