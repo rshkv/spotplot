@@ -1,11 +1,13 @@
+/* eslint-disable no-shadow */
+import * as _ from 'lodash';
 import { combineReducers } from 'redux';
-import { linkArtists } from './helpers';
-import { uniqBy, merge, keyBy } from 'lodash';
+import { linkArtists, createReducer } from './helpers';
 import {
   SET_TOKEN,
   FETCH_TRACKS,
   END_FETCH_TRACKS,
   RECEIVE_TRACKS,
+  RECEIVE_ARTISTS,
 } from './actions';
 
 const accessToken = createReducer(null, {
@@ -14,14 +16,22 @@ const accessToken = createReducer(null, {
 
 const network = createReducer({ tracks: [], artists: [], links: [] }, {
   [RECEIVE_TRACKS](network, action) {
-    const tracks = [...network.tracks, ...actions.tracks];
+    const tracks = [...network.tracks, ...action.tracks];
     const { artists, links } = linkArtists(tracks);
     return {
-      tracks: uniqBy(tracks),
-      artists: uniqBy(artists),
-      links: uniqBy(links),
+      tracks,
+      links,
+      artists: _.uniqBy(artists, a => a.id),
     };
   },
+
+  [RECEIVE_ARTISTS](network, action) {
+    const oldArtists = _.keyBy(network.artists, a => a.id);
+    const newArtists = _.keyBy(action.artists, a => a.id);
+    const mergedArtists = _.merge(oldArtists, newArtists);
+    return { ...network, artists: _.values(mergedArtists) };
+  },
+
 });
 
 const fetchingSongs = createReducer(false, {
@@ -34,11 +44,3 @@ export default combineReducers({
   network,
   fetchingSongs,
 });
-
-function createReducer(initialState, handlers) {
-  return (state = initialState, action) => (
-    handlers.hasOwnProperty(action.type) ?
-      handlers[action.type](state, action) :
-      state
-  );
-}

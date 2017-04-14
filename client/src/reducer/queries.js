@@ -11,6 +11,8 @@ export const tracksQuery = `
         popularity
         artists {
           id
+          name
+          type
         }
         album {
           images {
@@ -28,9 +30,6 @@ export function artistsQueryBuilder(artistIds) {
     {
       artists(ids: "${artistIds.join(',')}") {
         id
-        uri
-        name
-        type
         popularity
         genres
         images {
