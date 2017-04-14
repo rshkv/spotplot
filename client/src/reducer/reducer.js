@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import { linkArtist } from './helpers';
+import { linkArtists } from './helpers';
+import { uniqBy, merge, keyBy } from 'lodash';
 import {
   SET_TOKEN,
   FETCH_TRACKS,
+  END_FETCH_TRACKS,
   RECEIVE_TRACKS,
 } from './actions';
 
@@ -12,15 +14,19 @@ const accessToken = createReducer(null, {
 
 const network = createReducer({ tracks: [], artists: [], links: [] }, {
   [RECEIVE_TRACKS](network, action) {
-    const tracks = [...network.tracks, ...action.tracks];
-    const { artists, links } = linkArtist(tracks);
-    return { tracks, artists, links }
+    const tracks = [...network.tracks, ...actions.tracks];
+    const { artists, links } = linkArtists(tracks);
+    return {
+      tracks: uniqBy(tracks),
+      artists: uniqBy(artists),
+      links: uniqBy(links),
+    };
   },
 });
 
 const fetchingSongs = createReducer(false, {
   [FETCH_TRACKS]: () => true,
-  [RECEIVE_TRACKS]: () => false,
+  [END_FETCH_TRACKS]: () => false,
 });
 
 export default combineReducers({
