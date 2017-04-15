@@ -4,7 +4,7 @@ const SRC_DIR = path.resolve(__dirname, 'client/src');
 const DIST_DIR = path.resolve(__dirname, 'client/public');
 
 module.exports = {
-  entry: SRC_DIR + '/index.js',
+  entry: `${SRC_DIR}/index.js`,
   output: {
     path: DIST_DIR,
     filename: 'bundle.js',
@@ -14,11 +14,12 @@ module.exports = {
   // devtool: 'source-map',
   resolve: {
     alias: { soundmanager2: 'soundmanager2/script/soundmanager2-nodebug-jsmin.js' },
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.js/,
+        test: /(\.js|\.jsx)/,
         loader: 'babel-loader',
       }, {
         test: /\.scss$/,
@@ -38,5 +39,5 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-  }
+  },
 };

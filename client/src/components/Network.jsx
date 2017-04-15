@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
 import colors from '!!sass-variable-loader!../main.scss';
 
 export default class Network extends Component {
@@ -9,23 +9,16 @@ export default class Network extends Component {
     super();
     this.state = { selectedNode: null };
     this.artistRadius = () => 2;
-    this.trackRadius = (d) => Math.sqrt(d.popularity) + 1;
-    this.radius = (d) => (
+    this.trackRadius = d => Math.sqrt(d.popularity) + 1;
+    this.radius = d => (
       (d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)
     );
     this.transform = d3.zoomIdentity;
   }
 
-  render() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    return <canvas ref="network" width={width} height={height} />;
-  }
-
   componentDidMount() {
     const { onSelect, onClick } = this.props;
-    const canvas = ReactDOM.findDOMNode(this.refs.network);
+    const canvas = this.network;
     const { width, height } = canvas;
 
     const linkForce = d3.forceLink()
@@ -40,7 +33,7 @@ export default class Network extends Component {
     const yForce = d3.forceY().strength(0.06);
 
     const chargeForce = d3.forceManyBody()
-      .strength(d => (d.type === 'artist') ? -35 : -10);
+      .strength(d => ((d.type === 'artist') ? -35 : -10));
 
     this.simulation = d3.forceSimulation()
       .alphaDecay(0.006)
@@ -51,14 +44,14 @@ export default class Network extends Component {
       .force('charge', chargeForce);
 
     const nodeUnderMouse = () => {
-      const x = this.transform.invertX(d3.event.x) - width / 2;
-      const y = this.transform.invertY(d3.event.y) - height / 2;
+      const x = this.transform.invertX(d3.event.x) - (width / 2);
+      const y = this.transform.invertY(d3.event.y) - (height / 2);
       const closestNode = this.simulation.find(x, y);
 
       const isUnderMouse = (node) => {
-        const sqNodeRadius = Math.pow(this.radius(node), 2);
-        const sqDiffX = Math.pow(x - node.x, 2);
-        const sqDiffY = Math.pow(y - node.y, 2);
+        const sqNodeRadius = this.radius(node) ** 2;
+        const sqDiffX = (x - node.x) ** 2;
+        const sqDiffY = (y - node.y) ** 2;
         return (sqDiffX + sqDiffY) <= sqNodeRadius;
       };
 
@@ -80,11 +73,11 @@ export default class Network extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { network, onClick } = nextProps;
+    const { network } = nextProps;
     const { selectedNode } = nextState;
     const { tracks, artists, links } = network;
     const nodes = [...tracks, ...artists];
-    const canvas = ReactDOM.findDOMNode(this.refs.network)
+    const canvas = this.network;
     const ctx = canvas.getContext('2d');
     const { width, height } = ctx.canvas;
 
@@ -127,7 +120,7 @@ export default class Network extends Component {
         ctx.beginPath();
         drawNode(selectedNode);
         ctx.fill();
-      };
+      }
 
       ctx.restore();
     };
@@ -153,5 +146,12 @@ export default class Network extends Component {
     // this causes lag on rerendering
     drawNetwork();
     return false;
+  }
+
+  render() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    return <canvas ref={(c) => { this.network = c; }} width={width} height={height} />;
   }
 }

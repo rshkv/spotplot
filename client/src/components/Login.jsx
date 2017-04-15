@@ -5,17 +5,6 @@ import { setToken } from '../reducer/actions';
 
 class Login extends Component {
 
-  render() {
-    return (
-      <div className="container">
-        <div className="login">
-          <h1 className="title">Spotplot</h1>
-          <p className="subtitle">Welcome, please <a href='/login'>login</a></p>
-        </div>
-      </div>
-    );
-  }
-
   componentDidMount() {
     const { dispatch, params } = this.props;
     const { accessToken } = params;
@@ -29,6 +18,17 @@ class Login extends Component {
     if (accessToken) {
       hashHistory.push('/songs');
     }
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <div className="login">
+          <h1 className="title">Spotplot</h1>
+          <p className="subtitle">Welcome, please <a href="/login">login</a></p>
+        </div>
+      </div>
+    );
   }
 }
 

@@ -1,3 +1,4 @@
 node_modules/
 client/public/*
 !client/public/index.html
+playground/

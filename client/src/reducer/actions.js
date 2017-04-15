@@ -12,6 +12,7 @@ export const END_FETCH_TRACKS = 'END_FETCH_TRACKS';
 const spotify = SpotifyGraphQLClient;
 
 function fetchTracks(accessToken) {
+  console.log(accessToken);
   return spotify({ accessToken })
     .query(tracksQuery)
     .catch(e => console.log(e))
