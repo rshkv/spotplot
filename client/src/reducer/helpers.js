@@ -1,14 +1,9 @@
-export function linkArtists(tracks) {
-  const accumulator = ({ artists, links }, track) => {
-    links.push(...track.artists.map(a => ({ source: track.id, target: a.id })));
-    artists.push(...track.artists);
-    return { artists, links };
-  };
+import { flatten } from 'lodash';
 
-  return tracks.reduce(
-    accumulator,
-    { artists: [], links: [] },
-  );
+export function linkArtists(tracks) {
+  return flatten(tracks.map(t => (
+    t.artists.map(a => ({ source: t.id, target: a.id }))
+  )));
 }
 
 // spotify-graphql doesn't throw errors by itself
@@ -19,7 +14,7 @@ export function handleResult(r) {
 
 export function createReducer(initialState, handlers) {
   return (state = initialState, action) => (
-    handlers.hasOwnProperty(action.type) ?
+    (action.type in handlers) ?
       handlers[action.type](state, action) :
       state
   );

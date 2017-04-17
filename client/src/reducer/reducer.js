@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import * as _ from 'lodash';
+import { uniqBy } from 'lodash';
 import { combineReducers } from 'redux';
 import { linkArtists, createReducer } from './helpers';
 import {
@@ -16,20 +16,18 @@ const accessToken = createReducer(null, {
 
 const network = createReducer({ tracks: [], artists: [], links: [] }, {
   [RECEIVE_TRACKS](network, action) {
-    const tracks = [...network.tracks, ...action.tracks];
-    const { artists, links } = linkArtists(tracks);
     return {
-      tracks,
-      links,
-      artists: _.uniqBy(artists, a => a.id),
+      ...network,
+      tracks: uniqBy([...network.tracks, ...action.tracks], t => t.id),
     };
   },
 
   [RECEIVE_ARTISTS](network, action) {
-    const oldArtists = _.keyBy(network.artists, a => a.id);
-    const newArtists = _.keyBy(action.artists, a => a.id);
-    const mergedArtists = _.merge(oldArtists, newArtists);
-    return { ...network, artists: _.values(mergedArtists) };
+    return {
+      tracks: network.tracks,
+      artists: uniqBy([...network.artists, ...action.artists], a => a.id),
+      links: linkArtists(network.tracks),
+    };
   },
 
 });
