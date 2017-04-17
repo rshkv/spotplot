@@ -17,6 +17,8 @@ export const tracksQuery = `
         album {
           images {
             url
+            width
+            height
           }
         }
       }
@@ -30,10 +32,14 @@ export function artistsQueryBuilder(artistIds) {
     {
       artists(ids: "${artistIds.join(',')}") {
         id
+        name
+        type
         popularity
         genres
         images {
           url
+          width
+          height
         }
       }
     }

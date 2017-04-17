@@ -10,7 +10,7 @@ class Songs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTrack: null,
+      selectedNode: null,
       playing: false,
     };
   }
@@ -22,12 +22,10 @@ class Songs extends Component {
 
   render() {
     const { network, fetchingSongs } = this.props;
-    const { playing, selectedTrack } = this.state;
+    const { playing, selectedNode } = this.state;
 
     const onSelect = (d) => {
-      if (d.type === 'track') {
-        this.setState({ selectedTrack: d });
-      }
+      this.setState({ selectedNode: d });
     };
 
     const togglePlaying = () => {
@@ -39,8 +37,8 @@ class Songs extends Component {
         <div className="network">
           <Network network={network} onSelect={onSelect} onClick={togglePlaying} />
         </div>
-        {selectedTrack &&
-          <Player track={selectedTrack} playing={playing} togglePlaying={togglePlaying} />
+        {selectedNode &&
+          <Player node={selectedNode} playing={playing} togglePlaying={togglePlaying} />
         }
         <div className="songs">
           {fetchingSongs && <p className="subtitle">Loading songs...</p>}

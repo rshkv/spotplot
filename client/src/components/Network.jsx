@@ -7,9 +7,9 @@ export default class Network extends Component {
 
   constructor() {
     super();
-    this.state = { selectedNode: null };
-    this.artistRadius = () => 2;
-    this.trackRadius = d => Math.sqrt(d.popularity) + 1;
+    this.state = { selectedTrack: null };
+    this.artistRadius = () => 3;
+    this.trackRadius = d => Math.max(Math.sqrt(d.popularity), 3);
     this.radius = d => (
       (d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)
     );
@@ -61,20 +61,20 @@ export default class Network extends Component {
     d3.select(canvas)
       .on('mousemove', () => {
         const node = nodeUnderMouse();
-        if (node && node !== this.selectedNode) {
-          if (node.type === 'track') this.setState({ selectedNode: node });
+        if (node && node !== this.selectedTrack) {
+          if (node.type === 'track') this.setState({ selectedTrack: node });
           onSelect(node);
         }
       })
       .on('click', () => {
         const node = nodeUnderMouse(d3.event);
-        if (node) onClick(this.selectedNode);
+        if (node) onClick(this.selectedTrack);
       });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { network } = nextProps;
-    const { selectedNode } = nextState;
+    const { selectedTrack } = nextState;
     const { tracks, artists, links } = network;
     const nodes = [...tracks, ...artists];
     const canvas = this.network;
@@ -113,12 +113,12 @@ export default class Network extends Component {
       artists.forEach(drawNode);
       ctx.fill();
 
-      if (selectedNode) {
+      if (selectedTrack) {
         ctx.fillStyle = colors.lightGreen;
         ctx.shadowColor = colors.green;
         ctx.shadowBlur = 20;
         ctx.beginPath();
-        drawNode(selectedNode);
+        drawNode(selectedTrack);
         ctx.fill();
       }
 

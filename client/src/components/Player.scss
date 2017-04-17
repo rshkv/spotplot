@@ -8,10 +8,15 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
   display: flex;
   flex-direction: column;
 
-  img {
+  .node-image {
     max-width: $cover;
     max-height: $cover;
+    overflow: hidden;
+    img {
+      width: $cover;
+    }
   }
+
 
  .main {
     padding: 6px 10px;
@@ -59,10 +64,10 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
         text-overflow: ellipsis;
         overflow: hidden;
       }
-      .track-name { 
+      .node-title { 
         color: $font;
       }
-      .track-artists { 
+      .node-subtitle { 
         color: $font-pale;
       }
     }
