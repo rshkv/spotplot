@@ -4,21 +4,25 @@
  https://github.com/kauffecup/spotify-react-router-auth/
  https://developer.spotify.com/web-api/authorization-guide/
  */
-const Spotify = require('spotify-web-api-node');
-const config = require('./config.js');
-const express = require('express');
+import { Router } from "express";
+import * as Spotify from "spotify-web-api-node";
+import { credentials, scopes } from "./config";
 
-const router = new express.Router();
-const spotifyApi = new Spotify(config.credentials);
+// const Spotify = require('spotify-web-api-node');
+// const config = require('./config.js');
+// const express = require('express');
+
+const router = Router();
+const spotifyApi = new Spotify(credentials);
 
 // Redirect client to authorization
-router.get('/login', (request, response) => {
-  const authorizeUrl = spotifyApi.createAuthorizeURL(config.scopes);
+router.get("/login", (request, response) => {
+  const authorizeUrl = spotifyApi.createAuthorizeURL(scopes);
   response.redirect(authorizeUrl);
 });
 
 // Spotify redirects user here after authorization
-router.get('/callback', (request, response) => {
+router.get("/callback", (request, response) => {
   const { code } = request.query;
   spotifyApi.authorizationCodeGrant(code)
     .then((data) => {
@@ -29,9 +33,10 @@ router.get('/callback', (request, response) => {
       response.redirect(`/#/login/${access_token}`);
     })
     .catch((e) => {
-      console.log(e);
+      // tslint:disable-next-line no-console
+      console.error(e);
       response.redirect(`/#/error/${e.message}`);
     });
 });
 
-module.exports = router;
+export default router;
