@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import Sound from 'react-sound';
 import Progress from './Progress';
 import './Player.scss';
 
-export default class Player extends Component {
+export default class Player extends React.Component {
 
-  static imageUrl(node) {
+  public static imageUrl(node) {
     const isTrack = node.type === 'track';
     const imgs = isTrack ? node.album.images : node.images;
     return imgs.length ?
@@ -18,7 +18,7 @@ export default class Player extends Component {
     this.state = { loaded: false, progress: 0.0 };
   }
 
-  componentWillReceiveProps(nextProps) {
+  public componentWillReceiveProps(nextProps) {
     // Unset `loaded` if a new track is loaded
     if (this.props.node.id !== nextProps.node.id) {
       this.setState({
@@ -28,8 +28,7 @@ export default class Player extends Component {
     }
   }
 
-
-  render() {
+  public render() {
     const { node, playing, togglePlaying } = this.props;
     const { loaded, progress } = this.state;
 
@@ -59,7 +58,7 @@ export default class Player extends Component {
             }
           </div>
         </div>
-        {imgUrl && 
+        {imgUrl &&
           <div className="node-image">
             <img alt="Album or artist" src={imgUrl} />
           </div>

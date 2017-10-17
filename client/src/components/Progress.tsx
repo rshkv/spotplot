@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-export default class Progress extends Component {
+export default class Progress extends React.Component {
 
-  componentWillReceiveProps(nextProps) {
+  public componentWillReceiveProps(nextProps) {
     const { progress } = nextProps;
     if (progress) NProgress.set(progress);
-  };
+  }
 
-  render() {
+  public render() {
     return null;
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { parent, progress } = this.props;
 
     NProgress.configure({
@@ -26,7 +26,7 @@ export default class Progress extends Component {
     if (progress) NProgress.set(progress);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     NProgress.done();
   }
 

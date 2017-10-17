@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { fetchSongs } from '../reducer/actions';
 import Network from './Network';
 import Player from './Player';
 import Progress from './Progress';
 
-class Songs extends Component {
+class Songs extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,12 +15,12 @@ class Songs extends Component {
     };
   }
 
-  componentWillMount() {
+  public componentWillMount() {
     const { dispatch, accessToken } = this.props;
     dispatch(fetchSongs(accessToken));
   }
 
-  render() {
+  public render() {
     const { network, fetchingSongs } = this.props;
     const { playing, selectedNode } = this.state;
 

@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { setToken } from '../reducer/actions';
 
-class Login extends Component {
 
-  componentDidMount() {
+class Login extends React.Component {
+
+  public componentDidMount() {
     const { dispatch, params } = this.props;
     const { accessToken } = params;
     if (accessToken) {
@@ -13,14 +14,14 @@ class Login extends Component {
     }
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate() {
     const { accessToken } = this.props;
     if (accessToken) {
       hashHistory.push('/songs');
     }
   }
 
-  render() {
+  public render() {
     return (
       <div className="container">
         <div className="login">

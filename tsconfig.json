@@ -3,10 +3,11 @@
     "compilerOptions": {
         "outDir": "../client/dist/",
         "sourceMap": true,
-        "noImplicitAny": true,
+        // "noImplicitAny": true,  TODO: Add back in
         "module": "commonjs",
         "target": "es5",
-        "jsx": "react"
+        "jsx": "react",
+        "allowJs": true // TODO: Remove later
     },
     "include": [
         "./client/src/**/*"

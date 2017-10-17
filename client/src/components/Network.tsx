@@ -1,9 +1,21 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import * as d3 from 'd3';
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-import colors from '!!sass-variable-loader!../main.scss';
+// tslint:disable-next-line no-var-requires no-submodule-imports
+const colors = require('!!sass-variable-loader!../main.scss');
 
-export default class Network extends Component {
+export interface INetworkProps {
+  onSelect: (d: any) => void;
+  onClick: (d: any) => void;
+}
+
+export default class Network extends React.Component<INetworkProps, {}> {
+  private artistRadius: (d: any) => number;
+  private trackRadius: (d: any) => number;
+  private radius: (d: any) => number;
+  private transform: d3.ZoomTransform;
+  private network: HTMLCanvasElement;
+  private simulation;
+  private selectedTrack;
 
   constructor() {
     super();
@@ -16,12 +28,12 @@ export default class Network extends Component {
     this.transform = d3.zoomIdentity;
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { onSelect, onClick } = this.props;
     const canvas = this.network;
     const { width, height } = canvas;
 
-    const linkForce = d3.forceLink()
+    const linkForce = d3.forceLink<any, any>()
       .id(d => d.id)
       .distance(l => 1 + this.trackRadius(l.source) + this.artistRadius(l.target));
 
@@ -32,7 +44,7 @@ export default class Network extends Component {
 
     const yForce = d3.forceY().strength(0.06);
 
-    const chargeForce = d3.forceManyBody()
+    const chargeForce = d3.forceManyBody<any>()
       .strength(d => ((d.type === 'artist') ? -35 : -10));
 
     this.simulation = d3.forceSimulation()
@@ -67,12 +79,12 @@ export default class Network extends Component {
         }
       })
       .on('click', () => {
-        const node = nodeUnderMouse(d3.event);
+        const node = nodeUnderMouse();
         if (node) onClick(this.selectedTrack);
       });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  public shouldComponentUpdate(nextProps, nextState) {
     const { network } = nextProps;
     const { selectedTrack } = nextState;
     const { tracks, artists, links } = network;
@@ -148,7 +160,7 @@ export default class Network extends Component {
     return false;
   }
 
-  render() {
+  public render() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
