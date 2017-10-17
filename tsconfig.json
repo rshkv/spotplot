@@ -1,0 +1,14 @@
+// As per https://www.typescriptlang.org/docs/handbook/react-&-webpack.html
+{
+    "compilerOptions": {
+        "outDir": "../client/dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es5",
+        "jsx": "react"
+    },
+    "include": [
+        "./client/src/**/*"
+    ]
+}
