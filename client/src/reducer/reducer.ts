@@ -1,7 +1,8 @@
-/* eslint-disable no-shadow */
+/* tslint:disable no-shadowed-variable */
 import { uniqBy } from 'lodash';
 import { combineReducers } from 'redux';
 import { linkArtists, createReducer } from './helpers';
+import { INetwork } from '../types';
 import {
   SET_TOKEN,
   FETCH_TRACKS,
@@ -15,14 +16,14 @@ const accessToken = createReducer(null, {
 });
 
 const network = createReducer({ tracks: [], artists: [], links: [] }, {
-  [RECEIVE_TRACKS](network, action) {
+  [RECEIVE_TRACKS](network: INetwork, action): INetwork {
     return {
       ...network,
       tracks: uniqBy([...network.tracks, ...action.tracks], t => t.id),
     };
   },
 
-  [RECEIVE_ARTISTS](network, action) {
+  [RECEIVE_ARTISTS](network: INetwork, action): INetwork {
     return {
       tracks: network.tracks,
       artists: uniqBy([...network.artists, ...action.artists], a => a.id),

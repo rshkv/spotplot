@@ -1,14 +1,15 @@
 export interface IStoreState {
     accessToken: string;
     fetchingSongs: boolean;
-    network: {
-        artists: IArtist[];
-        links: ILink[];
-        tracks: ITrack[];
-    };
+    network: INetwork;
 }
 
 /* tslint:disable no-empty-interface */
-export interface IArtist {}
-export interface ILink {}
-export interface ITrack {}
+export interface INetwork {
+    artists: IArtist[];
+    links: ILink[];
+    tracks: ITrack[];
+}
+export interface IArtist { }
+export interface ILink { }
+export interface ITrack { }
