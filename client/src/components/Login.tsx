@@ -1,9 +1,17 @@
 import * as React from 'react';
+import * as Redux from 'redux';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { setToken } from '../reducer/actions';
+import { IStoreState } from '../types';
 
-class Login extends React.Component {
+export interface ILoginProps {
+  dispatch: Redux.Dispatch<IStoreState>;
+  params: { accessToken: string };
+  accessToken: string;
+}
+
+class Login extends React.Component<ILoginProps, {}> {
 
   public componentDidMount() {
     const { dispatch, params } = this.props;
