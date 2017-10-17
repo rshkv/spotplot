@@ -1,43 +1,46 @@
-const path = require('path');
-
-const SRC_DIR = path.resolve(__dirname, 'client/src');
-const DIST_DIR = path.resolve(__dirname, 'client/public');
-
 module.exports = {
-  entry: `${SRC_DIR}/index.js`,
+  entry: `./client/src/index.tsx`,
   output: {
-    path: DIST_DIR,
     filename: 'bundle.js',
+    path: __dirname + '/client/dist',
   },
 
-  // Adding source maps will slow down Webpack
-  // devtool: 'source-map',
+  // (SLOW) Enable sourcemaps for debugging webpack's output.
+  devtool: 'source-map',
+
   resolve: {
+    // TODO: Check if this is still necessary
     alias: { soundmanager2: 'soundmanager2/script/soundmanager2-nodebug-jsmin.js' },
-    extensions: ['.js', '.jsx'],
+    // Add '.ts' and '.tsx' as resolvable extensions.
+    extensions: ['.ts', '.tsx', '.js', '.json']
   },
+
   module: {
     rules: [
-      {
-        test: /(\.js|\.jsx)/,
-        loader: 'babel-loader',
-      }, {
-        test: /\.scss$/,
-        loader: 'style-loader!css-loader!sass-loader',
-      }, {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
-      },
+      // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+      { test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      { test: /\.json$/, loader: 'json-loader' },
     ],
   },
-  node: {
-    console: true,
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-  },
+
+  // When importing a module whose path matches one of the following, just
+  // assume a corresponding global variable exists and use that instead.
+  // This is important because it allows us to avoid bundling all of our
+  // dependencies, which allows browsers to cache those libraries between builds.
+  externals: {
+    "react": "React",
+    "react-dom": "ReactDOM"
+  }
+
+  // TODO: ?
+  // node: {
+  //   console: true,
+  //   fs: 'empty',
+  //   net: 'empty',
+  //   tls: 'empty',
+  // },
 };

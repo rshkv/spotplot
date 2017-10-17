@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import { createStore, applyMiddleware } from 'redux';
@@ -13,8 +13,8 @@ import './main.scss';
 
 const store = createStore(SpotifyData, applyMiddleware(thunkMiddleware));
 
-class Root extends Component {
-  render() {
+class Root extends React.Component {
+  public render() {
     return (
       <Provider store={store}>
         <Router history={hashHistory}>

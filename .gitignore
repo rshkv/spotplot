@@ -1,4 +1,4 @@
 node_modules/
-client/public/*
-!client/public/index.html
+client/dist/*
+!client/dist/index.html
 playground/
