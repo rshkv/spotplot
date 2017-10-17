@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { setToken } from '../reducer/actions';
 
-
 class Login extends React.Component {
 
   public componentDidMount() {

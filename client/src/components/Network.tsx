@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 const colors = require('!!sass-variable-loader!../main.scss');
 
 export interface INetworkProps {
+  network: any;  // TODO
   onSelect: (d: any) => void;
   onClick: (d: any) => void;
 }

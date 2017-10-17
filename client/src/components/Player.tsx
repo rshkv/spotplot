@@ -3,7 +3,13 @@ import Sound from 'react-sound';
 import Progress from './Progress';
 import './Player.scss';
 
-export default class Player extends React.Component {
+export interface IPlayerProps {
+  node: any;
+  playing: boolean;
+  togglePlaying: () => void;
+}
+
+export default class Player extends React.Component<IPlayerProps, {}> {
 
   public static imageUrl(node) {
     const isTrack = node.type === 'track';

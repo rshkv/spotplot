@@ -5,7 +5,19 @@ import Network from './Network';
 import Player from './Player';
 import Progress from './Progress';
 
-class Songs extends React.Component {
+export interface ISongsProps {
+  dispatch: any;
+  accessToken: string;
+  network: any;
+  fetchingSongs: boolean;
+}
+
+export interface ISongsState {
+  playing: boolean;
+  selectedNode: any;  // TODO
+}
+
+class Songs extends React.Component<ISongsProps, ISongsState> {
 
   constructor(props) {
     super(props);
