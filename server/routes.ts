@@ -4,25 +4,21 @@
  https://github.com/kauffecup/spotify-react-router-auth/
  https://developer.spotify.com/web-api/authorization-guide/
  */
-import { Router } from "express";
-import * as Spotify from "spotify-web-api-node";
-import { credentials, scopes } from "./config";
-
-// const Spotify = require('spotify-web-api-node');
-// const config = require('./config.js');
-// const express = require('express');
+import { Router } from 'express';
+import { credentials, scopes } from './config';
+import * as Spotify from 'spotify-web-api-node';
 
 const router = Router();
 const spotifyApi = new Spotify(credentials);
 
 // Redirect client to authorization
-router.get("/login", (request, response) => {
+router.get('/login', (request, response) => {
   const authorizeUrl = spotifyApi.createAuthorizeURL(scopes);
   response.redirect(authorizeUrl);
 });
 
 // Spotify redirects user here after authorization
-router.get("/callback", (request, response) => {
+router.get('/callback', (request, response) => {
   const { code } = request.query;
   spotifyApi.authorizationCodeGrant(code)
     .then((data) => {
