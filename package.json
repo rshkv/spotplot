@@ -15,7 +15,7 @@
     "react-sound": "^0.5.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "spotify-graphql": "^1.0.0",
+    "spotify-graphql": "^1.4.0",
     "spotify-web-api-node": "^2.3.6"
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "@types/react-dom": "^16.0.1",
     "awesome-typescript-loader": "^3.2.3",
     "css-loader": "^0.26.2",
+    "graphql-subscriptions": "^0.5.4",
     "json-loader": "^0.5.4",
     "node-sass": "^4.5.0",
     "sass-loader": "^6.0.3",

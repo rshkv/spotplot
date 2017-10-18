@@ -34,13 +34,12 @@ module.exports = {
   externals: {
     "react": "React",
     "react-dom": "ReactDOM"
-  }
+  },
 
-  // TODO: ?
-  // node: {
-  //   console: true,
-  //   fs: 'empty',
-  //   net: 'empty',
-  //   tls: 'empty',
-  // },
+  node: {
+    // console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+  },
 };

@@ -1,7 +1,9 @@
+/* tslint:disable no-console */
 import { SpotifyGraphQLClient } from 'spotify-graphql';
 import { flatten, uniq, chunk } from 'lodash';
 import { handleResult } from './helpers';
 import { tracksQuery, artistsQueryBuilder } from './queries';
+import { credentials } from '../../../server/config';
 
 export const SET_TOKEN = 'SET_TOKEN';
 export const FETCH_TRACKS = 'FETCH_TRACKS';
@@ -12,7 +14,7 @@ export const END_FETCH_TRACKS = 'END_FETCH_TRACKS';
 const spotify = SpotifyGraphQLClient;
 
 function fetchTracks(accessToken) {
-  return spotify({ accessToken })
+  return spotify({ accessToken, ...credentials })
     .query(tracksQuery)
     .catch(e => console.log(e))
     .then(handleResult)
@@ -24,7 +26,7 @@ function fetchArtistsFromTracks(tracks, accessToken) {
   const artistIds = flatten(tracks.map(t => t.artists.map(a => a.id)));
   const idChunks = chunk(uniq(artistIds), chunkSize);
   const artistRequests = idChunks.map(c => (
-    spotify({ accessToken })
+    spotify({ accessToken, ...credentials })
       .query(artistsQueryBuilder(c))
       .then(handleResult)
   ));
@@ -32,7 +34,7 @@ function fetchArtistsFromTracks(tracks, accessToken) {
   return Promise.all(artistRequests)
     .catch(e => console.log(e))
     .then((results) => {
-      const artistChunks = results.map(r => r.data.artists);
+      const artistChunks = (results as any[]).map(r => r.data.artists);
       const artists = flatten(artistChunks);
       return artists;
     });

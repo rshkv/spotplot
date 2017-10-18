@@ -2,7 +2,7 @@ export const tracksQuery = `
 {
   me {
     tracks(limit: -1) {
-      track { 
+      track {
         id
         uri
         name

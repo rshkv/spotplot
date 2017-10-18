@@ -9,7 +9,12 @@ export interface IPlayerProps {
   togglePlaying: () => void;
 }
 
-export default class Player extends React.Component<IPlayerProps, {}> {
+export interface IPlayerState {
+  loaded: boolean;
+  progress: number;
+}
+
+export default class Player extends React.Component<IPlayerProps, IPlayerState> {
 
   public static imageUrl(node) {
     const isTrack = node.type === 'track';
@@ -41,7 +46,7 @@ export default class Player extends React.Component<IPlayerProps, {}> {
     const isTrack = node.type === 'track';
     const imgUrl = Player.imageUrl(node);
 
-    // eslint-disable-next-line no-shadow
+    // tslint:disable-next-line no-shadowed-variable
     const onLoading = ({ loaded, bytesLoaded }) => {
       this.setState({ loaded, progress: bytesLoaded });
     };

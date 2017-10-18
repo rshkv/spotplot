@@ -1,8 +1,13 @@
 import * as React from 'react';
 import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
+import 'nprogress/nprogress.css';  // tslint:disable-line no-submodule-imports
 
-export default class Progress extends React.Component {
+export interface IProgressProps {
+  parent?: string;
+  progress?: number;
+}
+
+export default class Progress extends React.Component<IProgressProps, {}> {
 
   public componentWillReceiveProps(nextProps) {
     const { progress } = nextProps;
