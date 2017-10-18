@@ -6,7 +6,13 @@
     ],
     "rules": {
         "quotemark": [true, "single", "jsx-double"],
-        "ordered-imports": false,
+        "ordered-imports": [
+            true,
+            {
+                "import-sources-order": "case-insensitive",
+                "named-imports-order": "any"
+            }
+        ],
         "arrow-parens": false,
         "jsx-no-multiline-js": false,
         "curly": false,
