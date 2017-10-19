@@ -1,10 +1,11 @@
-import * as React from 'react';
 import * as d3 from 'd3';
+import * as React from 'react';
 // tslint:disable-next-line no-var-requires no-submodule-imports
 const colors = require('!!sass-variable-loader!../main.scss');
+import { INetwork } from '../types';
 
 export interface INetworkProps {
-  network: any;  // TODO
+  network: INetwork;
   onSelect: (d: any) => void;
   onClick: (d: any) => void;
 }
@@ -15,8 +16,8 @@ export default class Network extends React.Component<INetworkProps, {}> {
   private radius: (d: any) => number;
   private transform: d3.ZoomTransform;
   private network: HTMLCanvasElement;
-  private simulation;
-  private selectedTrack;
+  private simulation: any; // TODO
+  private selectedTrack: SpotifyApi.TrackObjectFull;
 
   constructor() {
     super();

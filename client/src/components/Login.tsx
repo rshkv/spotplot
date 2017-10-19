@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Redux from 'redux';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
+import * as Redux from 'redux';
 import { setToken } from '../reducer/actions';
 import { IStoreState } from '../types';
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { fetchSongs } from '../reducer/actions';
+import { INetwork } from '../types';
 import Network from './Network';
 import Player from './Player';
 import Progress from './Progress';
@@ -8,13 +9,13 @@ import Progress from './Progress';
 export interface ISongsProps {
   dispatch: any;
   accessToken: string;
-  network: any;
+  network: INetwork;
   fetchingSongs: boolean;
 }
 
 export interface ISongsState {
   playing: boolean;
-  selectedNode: any;  // TODO
+  selectedNode?: SpotifyApi.TrackObjectFull;
 }
 
 class Songs extends React.Component<ISongsProps, ISongsState> {

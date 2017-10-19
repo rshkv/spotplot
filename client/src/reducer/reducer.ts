@@ -1,8 +1,8 @@
 /* tslint:disable no-shadowed-variable */
 import { uniqBy } from 'lodash';
 import { combineReducers } from 'redux';
-import { linkArtists, createReducer } from './helpers';
 import { INetwork } from '../types';
+import { linkArtists, createReducer } from './helpers';
 import {
   SET_TOKEN,
   FETCH_TRACKS,

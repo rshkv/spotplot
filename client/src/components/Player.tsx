@@ -1,10 +1,13 @@
 import * as React from 'react';
-import * as Sound from 'react-sound';
+import Sound from 'react-sound';
 import './Player.scss';
 import Progress from './Progress';
 
+type Track = SpotifyApi.TrackObjectFull;
+type Artist = SpotifyApi.ArtistObjectFull;
+
 export interface IPlayerProps {
-  node: any;
+  node: Track | Artist;
   playing: boolean;
   togglePlaying: () => void;
 }
@@ -16,9 +19,9 @@ export interface IPlayerState {
 
 export default class Player extends React.Component<IPlayerProps, IPlayerState> {
 
-  public static imageUrl(node) {
+  public static imageUrl(node: Track | Artist): string {
     const isTrack = node.type === 'track';
-    const imgs = isTrack ? node.album.images : node.images;
+    const imgs = isTrack ? (node as Track).album.images : (node as Artist).images;
     return imgs.length ?
       imgs[Math.min(1, imgs.length - 1)].url :
       '';
@@ -55,7 +58,7 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
       <div className="player">
         <div className="main">
           <div>
-            {node.preview_url &&
+            {isTrack &&
               <button
                 className={`play-button ${playing ? 'playing' : 'paused'}`}
                 onClick={togglePlaying}
@@ -65,7 +68,9 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
           <div className="info">
             <div className="node-title">{node.name}</div>
             {isTrack &&
-              <div className="node-subtitle">{node.artists.map(a => a.name).join(', ')}</div>
+              <div className="node-subtitle">
+                {(node as Track).artists.map(a => a.name).join(', ')}
+              </div>
             }
           </div>
         </div>
@@ -74,12 +79,12 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
             <img alt="Album or artist" src={imgUrl} />
           </div>
         }
-        {!loaded && node.preview_url &&
+        {!loaded && isTrack &&
           <Progress parent={'.player'} progress={progress} />
         }
-        {node.preview_url &&
+        {isTrack &&
           <Sound
-            url={node.preview_url}
+            url={(node as Track).preview_url}
             playStatus={!loaded || (playing && loaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
             onFinishedPlaying={togglePlaying}
             volume={80}
