@@ -18,7 +18,7 @@ export async function getSavedTracks(accessToken: string): Promise<SpotifyApi.Tr
     const { total, items } = await rp(options);
     // Build requests for remaining (total - 50) items
     const requests = _.range(limit, total, limit)
-        .map((offset) => rp({ ...options, qs: { limit, offset } }));
+        .map(offset => rp({ ...options, qs: { limit, offset } }));
     // Await all requests and map to tracks
     const responses = (await Promise.all(requests)) as SpotifyApi.UsersSavedTracksResponse[];
     return [...items, ..._.flatMap(responses, 'items')]
@@ -38,11 +38,30 @@ export async function getArtists(ids: string[], accessToken: string): Promise<Sp
         json: true,
     };
 
+    // Chunk ids to fit the limit and build request per chunk
     const requests = _(ids)
         .chunk(limit)
-        .map((chunk) => rp({ ...options, qs: { ids: chunk.join(',') } }))
+        .map(chunk => rp({ ...options, qs: { ids: chunk.join(',') } }))
         .value();
 
     const responses = (await Promise.all(requests)) as SpotifyApi.MultipleArtistsResponse[];
     return _.flatMap(responses, 'artists');
+}
+
+/**
+ * Load full artists for tracks.
+ * @param tracks List of artist ids.
+ * @param accessToken Valid Spotify access token.
+ */
+export async function getArtistsFromTracks(
+    tracks: SpotifyApi.TrackObjectFull[] | SpotifyApi.TrackObjectSimplified[],
+    accessToken: string,
+): Promise<SpotifyApi.ArtistObjectFull[]> {
+    // Get a all unique artist ids
+    const artistIds = _(tracks)
+        .flatMap(t => _.map(t.artists, 'id'))
+        .uniq()
+        .value();
+
+    return await getArtists(artistIds, accessToken);
 }

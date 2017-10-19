@@ -22,7 +22,7 @@ describe('Api', () => {
         expect(tracks.length).to.be.greaterThan(0);
         expect(lastTrack.id).to.equal(expectedLastSavedTrack);
         expect(lastTrack).to.have.property('popularity');
-    }).timeout(5000);
+    }).timeout(10000);
 
     it('should return artists', async () => {
         const ids = ['0oSGxfWSnnOXhD2fKuz2Gy', '3dBVyJ7JuOMt4GE9607Qin'];
