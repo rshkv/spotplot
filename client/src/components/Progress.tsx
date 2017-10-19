@@ -1,6 +1,6 @@
-import * as React from 'react';
-import NProgress from 'nprogress';
+import * as NProgress from 'nprogress';
 import 'nprogress/nprogress.css';  // tslint:disable-line no-submodule-imports
+import * as React from 'react';
 
 export interface IProgressProps {
   parent?: string;

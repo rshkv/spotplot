@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Sound from 'react-sound';
-import Progress from './Progress';
+import * as Sound from 'react-sound';
 import './Player.scss';
+import Progress from './Progress';
 
 export interface IPlayerProps {
   node: any;
