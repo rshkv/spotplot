@@ -16,9 +16,10 @@ export function setToken(accessToken: string) {
   return { type: SET_TOKEN, accessToken };
 }
 
-export function fetchSongs(accessToken: string) {
+export function fetchSongs() {
   // TODO: Use getState to retrieve access token
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { accessToken } = getState();
     dispatch({ type: FETCH_TRACKS });
     const tracks = await api.getSavedTracks(accessToken);
     dispatch({ type: RECEIVE_TRACKS, tracks });
@@ -28,9 +29,9 @@ export function fetchSongs(accessToken: string) {
   };
 }
 
-export function togglePlay(accessToken: string, track?: Track) {
+export function togglePlay(track?: Track) {
   return async (dispatch, getState) => {
-    const { isPlaying, playingTrack } = getState();
+    const { isPlaying, playingTrack, accessToken } = getState();
     if (track && track.uri !== playingTrack) {
       await api.playTrack(track.uri, accessToken);
       dispatch({ type: SET_PLAY, track: track.uri });

@@ -8,7 +8,6 @@ import Progress from './Progress';
 
 export interface ISongsProps {
   dispatch: any;
-  accessToken: string;
   network: INetwork;
   isFetchingSongs: boolean;
 }
@@ -29,16 +28,16 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
   }
 
   public componentWillMount() {
-    const { dispatch, accessToken } = this.props;
-    dispatch(fetchSongs(accessToken));
+    const { dispatch } = this.props;
+    dispatch(fetchSongs());
   }
 
   public render() {
-    const { dispatch, accessToken, network, isFetchingSongs } = this.props;
+    const { dispatch, network, isFetchingSongs } = this.props;
     const { selectedNode } = this.state;
     const onSelect = (d: Artist | Track) => { this.setState({ selectedNode: d }); };
     const togglePlaying = (d: Artist | Track) => {
-      if (d.type === 'track') dispatch(togglePlay(accessToken, d));
+      if (d.type === 'track') dispatch(togglePlay(d));
     };
 
     return (
@@ -58,8 +57,7 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
   }
 }
 
-const mapStateToProps = ({ isFetchingSongs, network, accessToken }: IStoreState): Partial<ISongsProps> => ({
-  accessToken,
+const mapStateToProps = ({ isFetchingSongs, network }: IStoreState): Partial<ISongsProps> => ({
   isFetchingSongs,
   network,
 });
