@@ -1,23 +1,18 @@
 import * as React from 'react';
-import Sound from 'react-sound';
+import { connect } from 'react-redux';
+import { IStoreState } from '../types';
 import './Player.scss';
-import Progress from './Progress';
 
 type Track = SpotifyApi.TrackObjectFull;
 type Artist = SpotifyApi.ArtistObjectFull;
 
 export interface IPlayerProps {
+  isPlaying: boolean;
   node: Track | Artist;
-  shouldPlay: boolean;
   togglePlaying: () => void;
 }
 
-export interface IPlayerState {
-  isLoaded: boolean;
-  progress: number;
-}
-
-export default class Player extends React.Component<IPlayerProps, IPlayerState> {
+export class Player extends React.Component<IPlayerProps, {}> {
 
   /**
    * Return image url for input node.
@@ -32,36 +27,10 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
       '';
   }
 
-  constructor() {
-    super();
-    this.state = { isLoaded: false, progress: 0.0 };
-  }
-
-  /** Reset progress state on change of track. */
-  public componentWillReceiveProps(nextProps: IPlayerProps) {
-    if (this.props.node.id !== nextProps.node.id) {
-      this.setState({
-        isLoaded: false,
-        progress: 0.0,
-      });
-    }
-  }
-
-  /* tslint:disable no-console */
   public render() {
-    const { node, shouldPlay, togglePlaying } = this.props;
-    const { isLoaded, progress } = this.state;
-
-    // console.log(`Rendering - Loaded: ${isLoaded}, Progress: ${progress}, Should play: ${shouldPlay}`);
-
+    const { node, togglePlaying, isPlaying } = this.props;
     const isTrack = node.type === 'track';
     const imgUrl = Player.imageUrl(node);
-
-    // tslint:disable-next-line no-shadowed-variable
-    const onLoading = ({ bytesLoaded }) => {
-      if (shouldPlay) togglePlaying();
-      this.setState({ progress: bytesLoaded, isLoaded: bytesLoaded === 1 });
-    };
 
     return (
       <div className="player">
@@ -69,7 +38,7 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
           <div>
             {isTrack &&
               <button
-                className={`play-button ${shouldPlay ? 'playing' : 'paused'}`}
+                className={`play-button ${isPlaying ? 'playing' : 'paused'}`}
                 onClick={togglePlaying}
               />
             }
@@ -84,18 +53,13 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
           </div>
         </div>
         {imgUrl && <div className="node-image"><img src={imgUrl} /></div>}
-        {isTrack && !isLoaded && <Progress parent={'.player'} progress={progress} />}
-        {isTrack && (node as Track).preview_url &&
-          <Sound
-            url={(node as Track).preview_url}
-            autoLoad={true}
-            playStatus={(shouldPlay && isLoaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
-            onFinishedPlaying={togglePlaying}
-            volume={80}
-            onLoading={onLoading}
-          />
-        }
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ isPlaying }: IStoreState): Partial<IPlayerProps> => ({
+  isPlaying,
+});
+
+export default connect(mapStateToProps)(Player);

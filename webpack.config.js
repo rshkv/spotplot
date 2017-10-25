@@ -9,8 +9,6 @@ module.exports = {
   devtool: 'source-map',
 
   resolve: {
-    // TODO: Check if this is still necessary
-    alias: { soundmanager2: 'soundmanager2/script/soundmanager2-nodebug-jsmin.js' },
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ['.ts', '.tsx', '.js', '.json']
   },

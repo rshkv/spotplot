@@ -16,8 +16,6 @@ export interface ISongsState {
   selectedNode?: Track | Artist;
 }
 
-/* tslint:disable no-console */
-
 class Songs extends React.Component<ISongsProps, ISongsState> {
 
   constructor(props) {
@@ -36,8 +34,8 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
     const { dispatch, network, isFetchingSongs } = this.props;
     const { selectedNode } = this.state;
     const onSelect = (d: Artist | Track) => { this.setState({ selectedNode: d }); };
-    const togglePlaying = (d: Artist | Track) => {
-      if (d.type === 'track') dispatch(togglePlay(d));
+    const togglePlaying = () => {
+      if (this.state.selectedNode.type === 'track') dispatch(togglePlay(this.state.selectedNode));
     };
 
     return (
@@ -45,9 +43,9 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
         <div className="network">
           <Network network={network} onSelect={onSelect} onClick={togglePlaying} />
         </div>
-        {/* {selectedNode &&
-          <Player node={selectedNode} shouldPlay={shouldPlay} togglePlaying={this.togglePlaying.bind(this)} />
-        } */}
+        {selectedNode &&
+          <Player node={selectedNode} togglePlaying={togglePlaying} />
+        }
         <div className="songs">
           {isFetchingSongs && <p className="subtitle">Loading songs...</p>}
           {isFetchingSongs && <Progress />}
