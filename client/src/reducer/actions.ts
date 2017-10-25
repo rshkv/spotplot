@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Track } from '../types';
-import * as api from './api';
+import SpotifyApi from './api';
 import { handleResult } from './helpers';
 import { tracksQuery, artistsQueryBuilder } from './queries';
 
@@ -12,7 +12,10 @@ export const RECEIVE_TRACKS = 'RECEIVE_TRACKS';
 export const RECEIVE_ARTISTS = 'RECEIVE_ARTISTS';
 export const END_FETCH_TRACKS = 'END_FETCH_TRACKS';
 
+const api = new SpotifyApi();
+
 export function setToken(accessToken: string) {
+  api.setToken(accessToken);
   return { type: SET_TOKEN, accessToken };
 }
 
@@ -21,9 +24,9 @@ export function fetchSongs() {
   return async (dispatch, getState) => {
     const { accessToken } = getState();
     dispatch({ type: FETCH_TRACKS });
-    const tracks = await api.getSavedTracks(accessToken);
+    const tracks = await api.getSavedTracks();
     dispatch({ type: RECEIVE_TRACKS, tracks });
-    const artists = await api.getArtistsFromTracks(tracks, accessToken);
+    const artists = await api.getArtistsFromTracks(tracks);
     dispatch({ type: RECEIVE_ARTISTS, artists });
     dispatch({ type: END_FETCH_TRACKS });
   };
@@ -33,10 +36,10 @@ export function togglePlay(track?: Track) {
   return async (dispatch, getState) => {
     const { isPlaying, playingTrack, accessToken } = getState();
     if (track && track.uri !== playingTrack) {
-      await api.playTrack(track.uri, accessToken);
+      await api.playTrack(track.uri);
       dispatch({ type: SET_PLAY, track: track.uri });
     } else if (isPlaying) {
-      await api.pause(accessToken);
+      await api.pause();
       dispatch({ type: UNSET_PLAY });
     }
   };
