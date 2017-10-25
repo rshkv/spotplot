@@ -10,14 +10,17 @@ export interface INetworkProps {
   onClick: (d: any) => void;
 }
 
-export default class Network extends React.Component<INetworkProps, {}> {
+export interface INetworkState {
+  selectedTrack: SpotifyApi.TrackObjectFull;
+}
+
+export default class Network extends React.Component<INetworkProps, INetworkState> {
   private artistRadius: (d: any) => number;
   private trackRadius: (d: any) => number;
   private radius: (d: any) => number;
   private transform: d3.ZoomTransform;
   private network: HTMLCanvasElement;
   private simulation: any; // TODO
-  private selectedTrack: SpotifyApi.TrackObjectFull;
 
   constructor() {
     super();
@@ -74,15 +77,16 @@ export default class Network extends React.Component<INetworkProps, {}> {
 
     d3.select(canvas)
       .on('mousemove', () => {
+        const { selectedTrack } = this.state;
         const node = nodeUnderMouse();
-        if (node && node !== this.selectedTrack) {
-          if (node.type === 'track') this.setState({ selectedTrack: node });
+        if (node && (!selectedTrack || node.uri !== selectedTrack.uri)) {
+          if (node.type === 'track') { this.setState({ selectedTrack: node }); }
           onSelect(node);
         }
       })
       .on('click', () => {
         const node = nodeUnderMouse();
-        if (node) onClick(this.selectedTrack);
+        if (node) onClick(node);
       });
   }
 
