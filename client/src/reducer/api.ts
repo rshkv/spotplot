@@ -1,5 +1,8 @@
 import * as _ from 'lodash';
 import * as rp from 'request-promise';
+import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
+
+errors.StatusCodeError
 
 /**
  * Load all tracks saved in user library.
@@ -64,4 +67,33 @@ export async function getArtistsFromTracks(
         .value();
 
     return await getArtists(artistIds, accessToken);
+}
+
+/**
+ * Play a track.
+ * @param trackUri Spotify uri of form 'spotify:track:abc123'
+ * @param accessToken Spotify token with premium and 'user-modify-playback-state' permissions.
+ */
+export async function playTrack(trackUri: string, accessToken: string) {
+    const response = await rp.put({
+        uri: 'https://api.spotify.com/v1/me/player/play',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        json: true,
+        body: { uris: [trackUri] },
+        resolveWithFullResponse: true,
+    });
+
+    if (response.statusCode !== 204) throw new PlayError(response.statusCode);
+}
+
+class PlayError extends Error {
+    public statusCode: number;
+    constructor(statusCode: number) {
+        const message = (statusCode === 202)
+            ? 'No device available (202)'
+            : `${statusCode}`;
+        super(message);
+        this.name = 'PlayError';
+        this.statusCode = statusCode;
+    }
 }

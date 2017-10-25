@@ -28,6 +28,7 @@
     "@types/node": "^8.0.45",
     "@types/react": "^16.0.14",
     "@types/react-dom": "^16.0.1",
+    "@types/request-promise": "^4.1.38",
     "@types/sinon": "^2.3.6",
     "@types/spotify-api": "0.0.0",
     "awesome-typescript-loader": "^3.2.3",
