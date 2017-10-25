@@ -8,17 +8,22 @@ type Artist = SpotifyApi.ArtistObjectFull;
 
 export interface IPlayerProps {
   node: Track | Artist;
-  playing: boolean;
+  shouldPlay: boolean;
   togglePlaying: () => void;
 }
 
 export interface IPlayerState {
-  loaded: boolean;
+  isLoaded: boolean;
   progress: number;
 }
 
 export default class Player extends React.Component<IPlayerProps, IPlayerState> {
 
+  /**
+   * Return image url for input node.
+   * For tracks, return album image. For artists return artist image.
+   * @param node Track or artist object.
+   */
   public static imageUrl(node: Track | Artist): string {
     const isTrack = node.type === 'track';
     const imgs = isTrack ? (node as Track).album.images : (node as Artist).images;
@@ -29,29 +34,33 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
 
   constructor() {
     super();
-    this.state = { loaded: false, progress: 0.0 };
+    this.state = { isLoaded: false, progress: 0.0 };
   }
 
-  public componentWillReceiveProps(nextProps) {
-    // Unset `loaded` if a new track is loaded
+  /** Reset progress state on change of track. */
+  public componentWillReceiveProps(nextProps: IPlayerProps) {
     if (this.props.node.id !== nextProps.node.id) {
       this.setState({
-        loaded: false,
+        isLoaded: false,
         progress: 0.0,
       });
     }
   }
 
+  /* tslint:disable no-console */
   public render() {
-    const { node, playing, togglePlaying } = this.props;
-    const { loaded, progress } = this.state;
+    const { node, shouldPlay, togglePlaying } = this.props;
+    const { isLoaded, progress } = this.state;
+
+    // console.log(`Rendering - Loaded: ${isLoaded}, Progress: ${progress}, Should play: ${shouldPlay}`);
 
     const isTrack = node.type === 'track';
     const imgUrl = Player.imageUrl(node);
 
     // tslint:disable-next-line no-shadowed-variable
-    const onLoading = ({ loaded, bytesLoaded }) => {
-      this.setState({ loaded, progress: bytesLoaded });
+    const onLoading = ({ bytesLoaded }) => {
+      if (shouldPlay) togglePlaying();
+      this.setState({ progress: bytesLoaded, isLoaded: bytesLoaded === 1 });
     };
 
     return (
@@ -60,7 +69,7 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
           <div>
             {isTrack &&
               <button
-                className={`play-button ${playing ? 'playing' : 'paused'}`}
+                className={`play-button ${shouldPlay ? 'playing' : 'paused'}`}
                 onClick={togglePlaying}
               />
             }
@@ -74,18 +83,13 @@ export default class Player extends React.Component<IPlayerProps, IPlayerState> 
             }
           </div>
         </div>
-        {imgUrl &&
-          <div className="node-image">
-            <img alt="Album or artist" src={imgUrl} />
-          </div>
-        }
-        {!loaded && isTrack &&
-          <Progress parent={'.player'} progress={progress} />
-        }
-        {isTrack &&
+        {imgUrl && <div className="node-image"><img src={imgUrl} /></div>}
+        {isTrack && !isLoaded && <Progress parent={'.player'} progress={progress} />}
+        {isTrack && (node as Track).preview_url &&
           <Sound
             url={(node as Track).preview_url}
-            playStatus={!loaded || (playing && loaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
+            autoLoad={true}
+            playStatus={(shouldPlay && isLoaded) ? Sound.status.PLAYING : Sound.status.STOPPED}
             onFinishedPlaying={togglePlaying}
             volume={80}
             onLoading={onLoading}

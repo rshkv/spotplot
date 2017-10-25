@@ -14,9 +14,11 @@ export interface ISongsProps {
 }
 
 export interface ISongsState {
-  playing: boolean;
+  shouldPlay: boolean;
   selectedNode?: SpotifyApi.TrackObjectFull;
 }
+
+/* tslint:disable no-console */
 
 class Songs extends React.Component<ISongsProps, ISongsState> {
 
@@ -24,7 +26,7 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
     super(props);
     this.state = {
       selectedNode: null,
-      playing: false,
+      shouldPlay: false,
     };
   }
 
@@ -33,25 +35,40 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
     dispatch(fetchSongs(accessToken));
   }
 
+  /** Update selected node and reset playing status if the node changed.
+   *  Safari and Chrome do not allow autoply.
+   */
+  public onSelect(d) {
+    const { shouldPlay, selectedNode } = this.state;
+    console.log(this.state);
+    this.setState({
+      selectedNode: d,
+      shouldPlay: shouldPlay && (d.id === selectedNode.id),
+    });
+    if (selectedNode) console.log(shouldPlay && (d.id === selectedNode.id));
+    console.log('on select');
+    console.log(this.state);
+  }
+
+  public togglePlaying() {
+    const {shouldPlay} = this.state;
+    console.log(this.state);
+    this.setState({ shouldPlay: !shouldPlay });
+    console.log('toggle');
+    console.log(this.state);
+  }
+
   public render() {
     const { network, fetchingSongs } = this.props;
-    const { playing, selectedNode } = this.state;
-
-    const onSelect = (d) => {
-      this.setState({ selectedNode: d });
-    };
-
-    const togglePlaying = () => {
-      this.setState({ playing: !this.state.playing });
-    };
+    const { shouldPlay, selectedNode } = this.state;
 
     return (
       <div className="container">
         <div className="network">
-          <Network network={network} onSelect={onSelect} onClick={togglePlaying} />
+          <Network network={network} onSelect={this.onSelect.bind(this)} onClick={this.togglePlaying.bind(this)} />
         </div>
         {selectedNode &&
-          <Player node={selectedNode} playing={playing} togglePlaying={togglePlaying} />
+          <Player node={selectedNode} shouldPlay={shouldPlay} togglePlaying={this.togglePlaying.bind(this)} />
         }
         <div className="songs">
           {fetchingSongs && <p className="subtitle">Loading songs...</p>}
