@@ -2,14 +2,16 @@
 import { uniqBy } from 'lodash';
 import { combineReducers } from 'redux';
 import { INetwork } from '../types';
-import { linkArtists, createReducer } from './helpers';
 import {
-  SET_TOKEN,
-  FETCH_TRACKS,
   END_FETCH_TRACKS,
+  FETCH_TRACKS,
   RECEIVE_TRACKS,
   RECEIVE_ARTISTS,
+  SET_PLAY,
+  UNSET_PLAY,
+  SET_TOKEN,
 } from './actions';
+import { linkArtists, createReducer } from './helpers';
 
 const accessToken = createReducer(null, {
   [SET_TOKEN]: (_, action) => action.accessToken,
@@ -33,13 +35,19 @@ const network = createReducer({ tracks: [], artists: [], links: [] }, {
 
 });
 
-const fetchingSongs = createReducer(false, {
+const isFetchingSongs = createReducer(false, {
   [FETCH_TRACKS]: () => true,
   [END_FETCH_TRACKS]: () => false,
+});
+
+const isPlaying = createReducer(false, {
+  [SET_PLAY]: () => true,
+  [UNSET_PLAY]: () => false,
 });
 
 export default combineReducers({
   accessToken,
   network,
-  fetchingSongs,
+  isFetchingSongs,
+  isPlaying,
 });

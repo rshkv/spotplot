@@ -13,3 +13,6 @@ export interface INetwork {
 export interface IArtist { }
 export interface ILink { }
 export interface ITrack { }
+
+export type Track = SpotifyApi.TrackObjectFull;
+export type Artist = SpotifyApi.ArtistObjectFull;

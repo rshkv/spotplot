@@ -2,8 +2,6 @@ import * as _ from 'lodash';
 import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
 
-errors.StatusCodeError
-
 /**
  * Load all tracks saved in user library.
  * @param accessToken Valid Spotify access token associated with user.
@@ -80,6 +78,21 @@ export async function playTrack(trackUri: string, accessToken: string) {
         headers: { Authorization: `Bearer ${accessToken}` },
         json: true,
         body: { uris: [trackUri] },
+        resolveWithFullResponse: true,
+    });
+
+    if (response.statusCode !== 204) throw new PlayError(response.statusCode);
+}
+
+/**
+ * Pause playback.
+ * @param trackUri Spotify uri of form 'spotify:track:abc123'
+ * @param accessToken Spotify token with premium and 'user-modify-playback-state' permissions.
+ */
+export async function pause(accessToken: string) {
+    const response = await rp.put({
+        uri: 'https://api.spotify.com/v1/me/player/pause',
+        headers: { Authorization: `Bearer ${accessToken}` },
         resolveWithFullResponse: true,
     });
 
