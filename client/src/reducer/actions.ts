@@ -1,4 +1,3 @@
-/* tslint:disable no-console */
 import * as _ from 'lodash';
 import { Track } from '../types';
 import * as api from './api';
@@ -31,13 +30,13 @@ export function fetchSongs(accessToken: string) {
 
 export function togglePlay(accessToken: string, track?: Track) {
   return async (dispatch, getState) => {
-    const { isPlaying } = getState();
-    if (isPlaying) {
+    const { isPlaying, playingTrack } = getState();
+    if (track && track.uri !== playingTrack) {
+      await api.playTrack(track.uri, accessToken);
+      dispatch({ type: SET_PLAY, track: track.uri });
+    } else if (isPlaying) {
       await api.pause(accessToken);
       dispatch({ type: UNSET_PLAY });
-    } else if (track) {
-      await api.playTrack(track.uri, accessToken);
-      dispatch({ type: SET_PLAY });
     }
   };
 }

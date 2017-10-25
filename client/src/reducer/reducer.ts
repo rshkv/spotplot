@@ -13,6 +13,14 @@ import {
 } from './actions';
 import { linkArtists, createReducer } from './helpers';
 
+export interface IStoreState {
+  accessToken: string;
+  isFetchingSongs: boolean;
+  isPlaying: boolean;
+  network: INetwork;
+  playingTrack: string;
+}
+
 const accessToken = createReducer(null, {
   [SET_TOKEN]: (_, action) => action.accessToken,
 });
@@ -45,9 +53,15 @@ const isPlaying = createReducer(false, {
   [UNSET_PLAY]: () => false,
 });
 
+const playingTrack = createReducer(null, {
+  [SET_PLAY]: (_, action) => action.track,
+  [UNSET_PLAY]: () => null,
+});
+
 export default combineReducers({
   accessToken,
   network,
   isFetchingSongs,
   isPlaying,
+  playingTrack,
 });
