@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { fetchSongs, togglePlay } from '../reducer/actions';
-import { Artist, INetwork, Track } from '../types';
+import { Artist, INetwork, Track, IStoreState } from '../types';
 import Network from './Network';
 import Player from './Player';
 import Progress from './Progress';
@@ -10,7 +10,7 @@ export interface ISongsProps {
   dispatch: any;
   accessToken: string;
   network: INetwork;
-  fetchingSongs: boolean;
+  isFetchingSongs: boolean;
 }
 
 export interface ISongsState {
@@ -34,7 +34,7 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
   }
 
   public render() {
-    const { dispatch, accessToken, network, fetchingSongs } = this.props;
+    const { dispatch, accessToken, network, isFetchingSongs } = this.props;
     const { selectedNode } = this.state;
     const onSelect = (d: Artist | Track) => { this.setState({ selectedNode: d }); };
     const togglePlaying = (d: Artist | Track) => {
@@ -50,14 +50,18 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
           <Player node={selectedNode} shouldPlay={shouldPlay} togglePlaying={this.togglePlaying.bind(this)} />
         } */}
         <div className="songs">
-          {fetchingSongs && <p className="subtitle">Loading songs...</p>}
-          {fetchingSongs && <Progress />}
+          {isFetchingSongs && <p className="subtitle">Loading songs...</p>}
+          {isFetchingSongs && <Progress />}
         </div>
       </div>
     );
   }
 }
 
-export default connect(({ fetchingSongs, network, accessToken }) => (
-  { fetchingSongs, network, accessToken }
-))(Songs);
+const mapStateToProps = ({ isFetchingSongs, network, accessToken }: IStoreState): Partial<ISongsProps> => ({
+  accessToken,
+  isFetchingSongs,
+  network,
+});
+
+export default connect(mapStateToProps)(Songs);

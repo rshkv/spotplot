@@ -1,18 +1,14 @@
-export interface IStoreState {
-    accessToken: string;
-    fetchingSongs: boolean;
-    network: INetwork;
-}
+export { IStoreState } from '../reducer/reducer';
 
-/* tslint:disable no-empty-interface */
 export interface INetwork {
-    artists: IArtist[];
+    artists: Artist[];
     links: ILink[];
-    tracks: ITrack[];
+    tracks: Track[];
 }
-export interface IArtist { }
-export interface ILink { }
-export interface ITrack { }
+export interface ILink {
+    source: string;
+    target: string;
+}
 
 export type Track = SpotifyApi.TrackObjectFull;
 export type Artist = SpotifyApi.ArtistObjectFull;

@@ -1,9 +1,10 @@
-import { flatten } from 'lodash';
+import { flatMap, map } from 'lodash';
+import { ILink, Track } from '../types';
 
-export function linkArtists(tracks) {
-  return flatten(tracks.map(t => (
-    t.artists.map(a => ({ source: t.id, target: a.id }))
-  )));
+export function linkArtists(tracks: Track[]): ILink[] {
+  return flatMap(tracks, t => (
+    map(t.artists, a => ({ source: t.id, target: a.id }))
+  ));
 }
 
 // spotify-graphql doesn't throw errors by itself
