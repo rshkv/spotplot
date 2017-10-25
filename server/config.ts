@@ -1,8 +1,12 @@
-// Don't push this
+/*
+ *  Configuration assumed unchanged by Git.
+ *
+ *  tslint:disable quotemark
+ */
 export const credentials = {
-  clientId: "ENTER_HERE",
-  clientSecret: "ENTER_HERE",
-  redirectUri: "http://localhost:3000/callback",
+  clientId: 'ENTER_HERE',
+  clientSecret: 'ENTER_HERE',
+  redirectUri: 'http://localhost:3000/callback',
 };
 
-export const scopes = ["playlist-read-private", "user-library-read"];
+export const scopes = [ 'user-library-read', 'user-modify-playback-state' ];
