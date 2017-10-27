@@ -35,9 +35,9 @@ export function fetchSongs() {
 export function togglePlay(track?: Track) {
   return async (dispatch, getState) => {
     const { isPlaying, playingTrack, accessToken } = getState();
-    if (track && track.uri !== playingTrack) {
+    if (track && (!playingTrack || track.uri !== playingTrack.uri)) {
       await api.playTrack(track.uri);
-      dispatch({ type: SET_PLAY, track: track.uri });
+      dispatch({ type: SET_PLAY, track });
     } else if (isPlaying) {
       await api.pause();
       dispatch({ type: UNSET_PLAY });

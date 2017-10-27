@@ -2,21 +2,22 @@ import * as d3 from 'd3';
 import * as React from 'react';
 // tslint:disable-next-line no-var-requires no-submodule-imports
 const colors = require('!!sass-variable-loader!../main.scss');
-import { INetwork } from '../types';
+import { INetwork, Track, Artist, isTrack } from '../types';
 
 export interface INetworkProps {
   network: INetwork;
-  onSelect: (d: any) => void;
+  onSelect: (d: Track | Artist) => void;
+  onUnselect: () => void;
   onClick: (d: any) => void;
 }
 
 export interface INetworkState {
-  selectedTrack: SpotifyApi.TrackObjectFull;
+  selectedNode: Track | Artist;
 }
 
 export default class Network extends React.Component<INetworkProps, INetworkState> {
-  private artistRadius: (d: any) => number;
-  private trackRadius: (d: any) => number;
+  private artistRadius: (d: Artist) => number;
+  private trackRadius: (d: Track) => number;
   private radius: (d: any) => number;
   private transform: d3.ZoomTransform;
   private network: HTMLCanvasElement;
@@ -24,20 +25,14 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
 
   constructor() {
     super();
-    this.state = { selectedTrack: null };
+    this.state = { selectedNode: null };
     this.artistRadius = () => 3;
     this.trackRadius = d => Math.max(Math.sqrt(d.popularity), 3);
-    this.radius = d => (
-      (d.type === 'track') ? this.trackRadius(d) : this.artistRadius(d)
-    );
+    this.radius = d => (isTrack(d) ? this.trackRadius(d) : this.artistRadius(d));
     this.transform = d3.zoomIdentity;
   }
 
   public componentDidMount() {
-    const { onSelect, onClick } = this.props;
-    const canvas = this.network;
-    const { width, height } = canvas;
-
     const linkForce = d3.forceLink<any, any>()
       .id(d => d.id)
       .distance(l => 1 + this.trackRadius(l.source) + this.artistRadius(l.target));
@@ -50,7 +45,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     const yForce = d3.forceY().strength(0.06);
 
     const chargeForce = d3.forceManyBody<any>()
-      .strength(d => ((d.type === 'artist') ? -35 : -10));
+      .strength(d => (!isTrack(d) ? -35 : -10));
 
     this.simulation = d3.forceSimulation()
       .alphaDecay(0.006)
@@ -60,39 +55,12 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       .force('y', yForce)
       .force('charge', chargeForce);
 
-    const nodeUnderMouse = () => {
-      const x = this.transform.invertX(d3.event.x) - (width / 2);
-      const y = this.transform.invertY(d3.event.y) - (height / 2);
-      const closestNode = this.simulation.find(x, y);
-
-      const isUnderMouse = (node) => {
-        const sqNodeRadius = this.radius(node) ** 2;
-        const sqDiffX = (x - node.x) ** 2;
-        const sqDiffY = (y - node.y) ** 2;
-        return (sqDiffX + sqDiffY) <= sqNodeRadius;
-      };
-
-      return (!!closestNode && isUnderMouse(closestNode) && closestNode);
-    };
-
-    d3.select(canvas)
-      .on('mousemove', () => {
-        const { selectedTrack } = this.state;
-        const node = nodeUnderMouse();
-        if (node && (!selectedTrack || node.uri !== selectedTrack.uri)) {
-          if (node.type === 'track') { this.setState({ selectedTrack: node }); }
-          onSelect(node);
-        }
-      })
-      .on('click', () => {
-        const node = nodeUnderMouse();
-        if (node) onClick(node);
-      });
+    this.handleCanvasEvents();
   }
 
   public shouldComponentUpdate(nextProps, nextState) {
     const { network } = nextProps;
-    const { selectedTrack } = nextState;
+    const { selectedNode } = nextState;
     const { tracks, artists, links } = network;
     const nodes = [...tracks, ...artists];
     const canvas = this.network;
@@ -131,12 +99,12 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       artists.forEach(drawNode);
       ctx.fill();
 
-      if (selectedTrack) {
+      if (selectedNode && isTrack(selectedNode)) {
         ctx.fillStyle = colors.lightGreen;
         ctx.shadowColor = colors.green;
         ctx.shadowBlur = 20;
         ctx.beginPath();
-        drawNode(selectedTrack);
+        drawNode(selectedNode);
         ctx.fill();
       }
 
@@ -171,5 +139,43 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     const height = window.innerHeight;
 
     return <canvas ref={(c) => { this.network = c; }} width={width} height={height} />;
+  }
+
+  public handleCanvasEvents() {
+    const { onSelect, onUnselect, onClick } = this.props;
+    const canvas = this.network;
+    const { width, height } = canvas;
+
+    const nodeUnderMouse = () => {
+      const x = this.transform.invertX(d3.event.x) - (width / 2);
+      const y = this.transform.invertY(d3.event.y) - (height / 2);
+      const closestNode = this.simulation.find(x, y);
+
+      const isUnderMouse = (node) => {
+        const sqNodeRadius = this.radius(node) ** 2;
+        const sqDiffX = (x - node.x) ** 2;
+        const sqDiffY = (y - node.y) ** 2;
+        return (sqDiffX + sqDiffY) <= sqNodeRadius;
+      };
+
+      return (!!closestNode && isUnderMouse(closestNode) && closestNode);
+    };
+
+    d3.select(canvas)
+      .on('mousemove', () => {
+        const { selectedNode } = this.state;
+        const node = nodeUnderMouse();
+        if (node && (!selectedNode || node.uri !== selectedNode.uri)) {
+          this.setState({ selectedNode: node });
+          onSelect(node);
+        } else if (!node && selectedNode) {
+          this.setState({ selectedNode: null });
+          onUnselect();
+        }
+      })
+      .on('click', () => {
+        const node = nodeUnderMouse();
+        if (node) onClick(node);
+      });
   }
 }

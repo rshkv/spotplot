@@ -12,3 +12,4 @@ export interface ILink {
 
 export type Track = SpotifyApi.TrackObjectFull;
 export type Artist = SpotifyApi.ArtistObjectFull;
+export const isTrack = (d: Track | Artist) => d.type === 'track';
