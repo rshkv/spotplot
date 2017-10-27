@@ -1,7 +1,7 @@
 /* tslint:disable no-shadowed-variable */
 import { uniqBy } from 'lodash';
 import { combineReducers } from 'redux';
-import { INetwork } from '../types';
+import { INetwork, Track } from '../types';
 import {
   END_FETCH_TRACKS,
   FETCH_TRACKS,
@@ -18,7 +18,7 @@ export interface IStoreState {
   isFetchingSongs: boolean;
   isPlaying: boolean;
   network: INetwork;
-  playingTrack: string;
+  playingTrack: Track;
 }
 
 const accessToken = createReducer(null, {
