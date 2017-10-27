@@ -26,7 +26,7 @@ describe('Api', () => {
     }).timeout(10000);
 
     it('should return artists', async () => {
-        const ids = ['0oSGxfWSnnOXhD2fKuz2Gy', '3dBVyJ7JuOMt4GE9607Qin'];
+        const ids = ['0oSGxfWSnnOXhD2fKuz2Gy', '3dBVyJ7JuOMt4GE9607Qin', '3dBVyJ7JuOMt4GE9607Qin'];
 
         const artists = await api.getArtists(ids);
         expect(artists.map(a => a.id)).to.have.ordered.members(ids);

@@ -1,8 +1,15 @@
+import * as DataLoader from 'dataloader';
 import * as _ from 'lodash';
 import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
+import { Artist, Track } from '../types';
+
+interface ISpotifyApiLoaders {
+    artists: DataLoader<string, Artist>;
+}
 
 export default class SpotifyApi {
+    public loaders: ISpotifyApiLoaders;
     private accessToken: string;
 
     /**
@@ -11,6 +18,7 @@ export default class SpotifyApi {
      */
     constructor(accessToken?: string) {
         this.accessToken = accessToken;
+        this.loaders = this.createLoaders(accessToken);
     }
 
     /**
@@ -19,6 +27,7 @@ export default class SpotifyApi {
      */
     public setToken(accessToken: string): SpotifyApi {
         this.accessToken = accessToken;
+        this.loaders = this.createLoaders(accessToken);
         return this;
     }
 
@@ -47,37 +56,22 @@ export default class SpotifyApi {
      * Load artists for a list of ids.
      * @param ids List of artist ids.
      */
-    public async getArtists(ids: string[]): Promise<SpotifyApi.ArtistObjectFull[]> {
-        const limit = 50;
-        const options = {
-            uri: 'https://api.spotify.com/v1/artists',
-            headers: { Authorization: `Bearer ${this.accessToken}` },
-            json: true,
-        };
-
-        // Chunk ids to fit the limit and build request per chunk
-        const requests = _(ids)
-            .chunk(limit)
-            .map(chunk => rp({ ...options, qs: { ids: chunk.join(',') } }))
-            .value();
-
-        const responses = (await Promise.all(requests)) as SpotifyApi.MultipleArtistsResponse[];
-        return _.flatMap(responses, 'artists');
+    public async getArtists(ids: string[]): Promise<Artist[]> {
+        return this.loaders.artists.loadMany(ids);
     }
+
     /**
      * Load full artists for tracks.
      * @param tracks List of artist ids.
      */
     public async getArtistsFromTracks(
-        tracks: SpotifyApi.TrackObjectFull[] | SpotifyApi.TrackObjectSimplified[]
-    ): Promise<SpotifyApi.ArtistObjectFull[]> {
-        // Get a all unique artist ids
+        tracks: Track[] | SpotifyApi.TrackObjectSimplified[],
+    ): Promise<Artist[]> {
         const artistIds = _(tracks)
             .flatMap(t => _.map(t.artists, 'id'))
             .uniq()
             .value();
-
-        return await this.getArtists(artistIds);
+        return await this.loaders.artists.loadMany(artistIds);
     }
 
     /**
@@ -108,6 +102,25 @@ export default class SpotifyApi {
         });
 
         if (response.statusCode !== 204) throw new PlayError(response.statusCode);
+    }
+
+    /** Initiliaze data loaders. */
+    protected createLoaders(accessToken: string): ISpotifyApiLoaders {
+        return {
+            artists: new DataLoader((ids) => this.fetchArtists(accessToken, ids), { maxBatchSize: 50 }),
+        };
+    }
+
+    /** Load artists for a list of ids. */
+    protected async fetchArtists(accessToken: string, ids: string[]): Promise<Artist[]> {
+        const options = {
+            uri: 'https://api.spotify.com/v1/artists',
+            headers: { Authorization: `Bearer ${accessToken}` },
+            json: true,
+            qs: { ids: ids.join(',') },
+        };
+        const response = await rp(options);
+        return response.artists;
     }
 }
 
