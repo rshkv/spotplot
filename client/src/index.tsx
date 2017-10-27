@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import App from './components/App';
 import Error from './components/Error';
 import Login from './components/Login';
+import Selection from './components/Selection';
 import Songs from './components/Songs';
 import './main.scss';
 import SpotifyData from './reducer/reducer';
@@ -22,6 +23,7 @@ class Root extends React.Component {
             <IndexRoute component={Login} />
             <Route path="/login/:accessToken" component={Login} />
             <Route path="/error/:error" component={Error} />
+            <Route path="/selection" component={Selection} />
             <Route path="/songs" component={Songs} />
           </Route>
         </Router>

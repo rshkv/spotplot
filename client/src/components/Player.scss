@@ -35,8 +35,8 @@ $pause: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI2MCAxNTEyIiB4bW
       border: 1px solid $font-pale;
       transition: background-color 0.2s;
       &:hover, &.playing {
-        border-color: $light-green;
-        background-color: $light-green;
+        border-color: $green;
+        background-color: $green;
       }
 
       // Play/Pause images

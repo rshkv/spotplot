@@ -100,7 +100,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       ctx.fill();
 
       if (selectedNode && isTrack(selectedNode)) {
-        ctx.fillStyle = colors.lightGreen;
+        ctx.fillStyle = colors.green;
         ctx.shadowColor = colors.green;
         ctx.shadowBlur = 20;
         ctx.beginPath();

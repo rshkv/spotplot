@@ -1,5 +1,5 @@
-$light-green: #15d85e;
-$green: #19b954;
+$green: #1DB954;
+$hover-green: #4bdf80;
 $blue: #4686d5;
 $font: #fff;
 $font-pale: #a0a0a0;
@@ -8,7 +8,7 @@ $black: #181818;
 
 
 * {
-    font-family: 'proxima_nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #FFF;
     margin: 0;
     padding: 0;
@@ -23,22 +23,29 @@ body {
     overflow: hidden; /* Removes scroll bars */
 }
 
-.login {
-    margin: 200px;
+.jumbo {
+    margin-top: 200px;
 }
 
 .container {
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .title {
-    font-size: 50px;
+    font-size: 46px;
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: 18px;
 }
 
 .subtitle {
-    font-size: 24px;
+    font-size: 36px;
+    font-weight: 400;
+}
+
+.text {
+    font-size: 18px;
     font-weight: 300;
 }
 
@@ -54,6 +61,18 @@ body {
     bottom: 0;
     left: 0;
     margin: 30px;
+}
+
+.button {
+    color: $font;
+    background-color: $green;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 500px;
+    padding: 21px 56px 19px;
+    font-size: 16px;
+    display: inline-block;
+    margin: 32px 0px;
 }
 
 #nprogress {
