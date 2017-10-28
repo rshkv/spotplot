@@ -20,7 +20,7 @@ export function setToken(accessToken: string) {
 }
 
 export function fetchSongs() {
-  // TODO: Use getState to retrieve access token
+
   return async (dispatch, getState) => {
     const { accessToken } = getState();
     dispatch({ type: FETCH_TRACKS });

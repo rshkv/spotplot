@@ -5,8 +5,8 @@
  https://developer.spotify.com/web-api/authorization-guide/
  */
 import { Router } from 'express';
-import { credentials, scopes } from './config';
 import * as Spotify from 'spotify-web-api-node';
+import { credentials, scopes } from './config';
 
 const router = Router();
 const spotifyApi = new Spotify(credentials);

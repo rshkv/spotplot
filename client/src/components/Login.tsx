@@ -30,21 +30,22 @@ class Login extends React.Component<ILoginProps, {}> {
 
   public render() {
     return (
-      <div className="container jumbo">
-        <div>
-          <div className="title">Spotplot</div>
-          <div className="text">
-            Spotplot is a new way to sift through your music on Spotify.<br />
-            Spot the musicians and collaborations behind the music you love.<br />
-            <br />
-            Spotplot can display playlists or your library songs.<br />
-            To get started, please login:<br />
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <div className="display-3 m-3 w-25 text-center">
+          Spotplot
+        </div>
+        <div className="d-flex flex-column align-items-center w-25 m-3">
+          <p className="text-justify">
+            Spotplot is a new way to sift through your music on Spotify.
+            Spot the musicians and collaborations behind the music you love.
+            Spotplot can display playlists or your library songs.
+            To get started, please login:
+          </p>
+          <div>
+            <a href="/login" className="button">login</a>
           </div>
         </div>
-        <div>
-          <a href="/login" className="button">login</a>
-        </div>
-      </div >
+      </div>
     );
   }
 }

@@ -1,3 +1,4 @@
+@import '../../node_modules/bootstrap/scss/bootstrap';
 $green: #1DB954;
 $hover-green: #4bdf80;
 $blue: #4686d5;
@@ -9,45 +10,44 @@ $black: #181818;
 
 * {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #FFF;
+    color: $font;
     margin: 0;
     padding: 0;
 }
 
-body {
+// Make vertical fullsize
+.app, #root, .container {
+    @extend .h-100;
+}
+
+html, body {
     background: $black;
-    margin: 0;
-    padding: 0;
     height: 100%;
     min-height: 100%;
     overflow: hidden; /* Removes scroll bars */
 }
 
-.jumbo {
-    margin-top: 200px;
-}
-
-.container {
+.flex {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.title {
-    font-size: 46px;
-    font-weight: 500;
-    margin-bottom: 18px;
-}
+// .title {
+//     font-size: 46px;
+//     font-weight: 500;
+//     margin-bottom: 18px;
+// }
 
-.subtitle {
-    font-size: 36px;
-    font-weight: 400;
-}
+// .subtitle {
+//     font-size: 36px;
+//     font-weight: 400;
+// }
 
-.text {
-    font-size: 18px;
-    font-weight: 300;
-}
+// .text {
+//     font-size: 18px;
+//     font-weight: 300;
+// }
 
 .player {
     position: absolute;
@@ -69,10 +69,10 @@ body {
     text-decoration: none;
     text-transform: uppercase;
     border-radius: 500px;
-    padding: 21px 56px 19px;
+    padding: 10px 40px 10px;
     font-size: 16px;
     display: inline-block;
-    margin: 32px 0px;
+    // margin: 32px 0px;
 }
 
 #nprogress {
