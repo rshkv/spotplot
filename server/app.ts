@@ -7,6 +7,7 @@ const app = express();
 
 app
   .use(express.static(path.resolve(__dirname, '../client/dist')))
+  .use('/node_modules', express.static(path.resolve(__dirname, '../node_modules')))
   .use('/', router)
   .listen(PORT, () => {
     // tslint:disable-next-line no-console
