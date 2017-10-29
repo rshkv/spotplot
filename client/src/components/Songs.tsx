@@ -18,18 +18,17 @@ export interface ISongsState {
   displayNode?: Track | Artist;
 }
 
-class Songs extends React.Component<ISongsProps, ISongsState> {
+class Songs<T extends ISongsProps> extends React.Component<T, ISongsState> {
+  protected fetch: () => any;
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedNode: null,
-    };
+    this.state = { selectedNode: null };
   }
 
   public componentWillMount() {
     const { dispatch } = this.props;
-    dispatch(fetchSongs());
+    dispatch(this.fetch());
   }
 
   public render() {
@@ -58,10 +57,4 @@ class Songs extends React.Component<ISongsProps, ISongsState> {
   }
 }
 
-const mapStateToProps = ({ isFetchingSongs, network, isPlaying }: IStoreState): Partial<ISongsProps> => ({
-  isFetchingSongs,
-  network,
-  isPlaying,
-});
-
-export default connect(mapStateToProps)(Songs);
+export default Songs;

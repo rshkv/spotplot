@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import App from './components/App';
 import Error from './components/Error';
+import LibrarySongs from './components/LibrarySongs';
 import Login from './components/Login';
+import PlaylistSongs from './components/PlaylistSongs';
 import Selection from './components/Selection';
-import Songs from './components/Songs';
 import './main.scss';
 import { setToken } from './reducer/actions';
 import SpotifyData from './reducer/reducer';
@@ -28,14 +29,15 @@ class Root extends React.Component {
   public render() {
     return (
       <Provider store={store}>
-        <Router history={hashHistory}>
-          <Route path="/" component={App}>
-            <IndexRoute component={Login} />
+        <Router>
+          <App>
+            <Route exact={true} path="/" component={Login} />
             <Route path="/login/:accessToken" component={Login} />
             <Route path="/error/:error" component={Error} />
             <Route path="/selection" component={Selection} />
-            <Route path="/songs" component={Songs} />
-          </Route>
+            <Route path="/songs" component={LibrarySongs} />
+            <Route path="/playlist/:uri" component={PlaylistSongs} />
+          </App>
         </Router>
       </Provider>
     );

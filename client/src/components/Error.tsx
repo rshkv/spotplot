@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-const Error = (props) => {
-  const { error } = props.params;
+const Error = ({ match }) => {
+  const { error } = match.params;
   return (
     <div className="container">
       <h1>Error</h1>

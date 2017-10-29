@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface ISelectionState {
     enteredPlaylist?: string;
 }
 
-export default class Selection extends React.Component<{}, ISelectionState> {
+export default class Selection extends React.Component<any, ISelectionState> {
 
     public constructor(props) {
         super(props);
-        this.state = { enteredPlaylist: 'https://open.spotify.com/user/spotify/playlist/37i9dQZF1DX6J5NfMJS675' };
+        this.state = { enteredPlaylist: 'spotify:user:1121825855:playlist:7vl4gIrEYfh69vVlioNl19' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,7 +28,7 @@ export default class Selection extends React.Component<{}, ISelectionState> {
                         <h4>Library</h4>
                         <p>View songs saved to your library.</p>
                         <div className="text-center">
-                            <Link to="/songs" className="button">Show</Link>
+                            {<Link to="/songs" className="button">Show</Link>}
                         </div>
                     </div>
 
@@ -63,7 +63,8 @@ export default class Selection extends React.Component<{}, ISelectionState> {
     }
 
     protected handleSubmit(event) {
-        alert(`Playlist was submitted: ${this.state.enteredPlaylist}`);
+        event.preventDefault();
+        this.props.history.push(`/playlist/${this.state.enteredPlaylist}`);
     }
 
 }
