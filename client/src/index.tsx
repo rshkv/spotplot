@@ -10,9 +10,19 @@ import Login from './components/Login';
 import Selection from './components/Selection';
 import Songs from './components/Songs';
 import './main.scss';
+import { setToken } from './reducer/actions';
 import SpotifyData from './reducer/reducer';
 
-const store = createStore(SpotifyData, applyMiddleware(thunkMiddleware));
+const store = createStore(
+  SpotifyData,
+  applyMiddleware(thunkMiddleware));
+
+store.subscribe(() => {
+  const { accessToken } = store.getState();
+  localStorage.setItem('accessToken', accessToken);
+});
+
+loadToken();
 
 class Root extends React.Component {
   public render() {
@@ -33,3 +43,10 @@ class Root extends React.Component {
 }
 
 render(<Root />, document.getElementById('root'));
+
+function loadToken() {
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken) {
+    store.dispatch(setToken(accessToken));
+  }
+}
