@@ -9,7 +9,7 @@ export default class Selection extends React.Component<any, ISelectionState> {
 
     public constructor(props) {
         super(props);
-        this.state = { enteredPlaylist: 'spotify:user:1121825855:playlist:7vl4gIrEYfh69vVlioNl19' };
+        this.state = { enteredPlaylist: 'https://open.spotify.com/user/spotify/playlist/37i9dQZF1DX8CopunbDxgW' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,13 +58,22 @@ export default class Selection extends React.Component<any, ISelectionState> {
         );
     }
 
+    protected parsePlaylist(url: string): { user: string, playlist: string } {
+        const regex = /user[:\/](\w*)[:\/]playlist[:\/](\w*)/;
+        const match = regex.exec(url);
+        const [fullMatch, user, playlist] = match;
+        return { user, playlist };
+    }
+
     protected handleChange(event) {
         this.setState({ enteredPlaylist: event.target.value });
     }
 
     protected handleSubmit(event) {
+        const { enteredPlaylist } = this.state;
+        const { user, playlist } = this.parsePlaylist(enteredPlaylist);
         event.preventDefault();
-        this.props.history.push(`/playlist/${this.state.enteredPlaylist}`);
+        this.props.history.push(`/playlist/${user}/${playlist}`);
     }
 
 }

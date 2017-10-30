@@ -13,7 +13,7 @@ interface IPlaylistSongsProps extends ISongsProps {
   network: INetwork;
   isFetchingSongs: boolean;
   isPlaying: boolean;
-  match: Match<{ uri: string }>;
+  match: Match<{ user: string, playlist: string }>;
 }
 
 class PlaylistSongs extends Songs<IPlaylistSongsProps> {
@@ -22,8 +22,10 @@ class PlaylistSongs extends Songs<IPlaylistSongsProps> {
   constructor(props) {
     super(props);
     this.fetch = () => {
-      const { uri } = this.props.match.params;
-      console.log(uri);
+      const { user, playlist } = this.props.match.params;
+      console.log('TODO: Load playlist for: ...');
+      console.log(user);
+      console.log(playlist);
       return fetchSongs();
     };
   }

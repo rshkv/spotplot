@@ -58,7 +58,7 @@ const playingTrack = createReducer(null, {
   [UNSET_PLAY]: () => null,
 });
 
-export default combineReducers({
+export default combineReducers<IStoreState>({
   accessToken,
   network,
   isFetchingSongs,

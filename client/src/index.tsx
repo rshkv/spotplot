@@ -36,7 +36,7 @@ class Root extends React.Component {
             <Route path="/error/:error" component={Error} />
             <Route path="/selection" component={Selection} />
             <Route path="/songs" component={LibrarySongs} />
-            <Route path="/playlist/:uri" component={PlaylistSongs} />
+            <Route path="/playlist/:user/:playlist" component={PlaylistSongs} />
           </App>
         </Router>
       </Provider>
