@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
-import { Track } from '../types';
+import { Dispatch } from 'redux';
+import { Track, IStoreState } from '../types';
 import Api from './api';
 import { handleResult } from './helpers';
 import { tracksQuery, artistsQueryBuilder } from './queries';
@@ -19,10 +20,21 @@ export function setToken(accessToken: string) {
   return { type: SET_TOKEN, accessToken };
 }
 
-export function fetchSongs() {
+export function togglePlay(track?: Track) {
+  return async (dispatch: Dispatch<IStoreState>, getState: () => IStoreState) => {
+    const { isPlaying, playingTrack } = getState();
+    if (track && (!playingTrack || track.uri !== playingTrack.uri)) {
+      await api.playTrack(track.uri);
+      dispatch({ type: SET_PLAY, track });
+    } else if (isPlaying) {
+      await api.pause();
+      dispatch({ type: UNSET_PLAY });
+    }
+  };
+}
 
-  return async (dispatch, getState) => {
-    const { accessToken } = getState();
+export function fetchSongs() {
+  return async (dispatch: Dispatch<IStoreState>, getState: () => IStoreState) => {
     dispatch({ type: FETCH_TRACKS });
     const tracks = await api.getSavedTracks();
     dispatch({ type: RECEIVE_TRACKS, tracks });
@@ -32,15 +44,13 @@ export function fetchSongs() {
   };
 }
 
-export function togglePlay(track?: Track) {
-  return async (dispatch, getState) => {
-    const { isPlaying, playingTrack, accessToken } = getState();
-    if (track && (!playingTrack || track.uri !== playingTrack.uri)) {
-      await api.playTrack(track.uri);
-      dispatch({ type: SET_PLAY, track });
-    } else if (isPlaying) {
-      await api.pause();
-      dispatch({ type: UNSET_PLAY });
-    }
+export function fetchPlaylist(userId, playlistId) {
+  return async (dispatch: Dispatch<IStoreState>) => {
+    dispatch({ type: FETCH_TRACKS });
+    const tracks = await api.getPlaylistTracks(userId, playlistId);
+    dispatch({ type: RECEIVE_TRACKS, tracks });
+    const artists = await api.getArtistsFromTracks(tracks);
+    dispatch({ type: RECEIVE_ARTISTS, artists });
+    dispatch({ type: END_FETCH_TRACKS });
   };
 }

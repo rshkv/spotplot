@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { fetchSongs, togglePlay } from '../reducer/actions';
-import { Artist, INetwork, Track, IStoreState, isTrack } from '../types';
-import Network from './Network';
-import Player from './Player';
-import Progress from './Progress';
-import Songs, { ISongsProps, ISongsState } from './Songs';
+import { fetchSongs } from '../reducer/actions';
+import { IStoreState } from '../types';
+import Songs, { ISongsProps } from './Songs';
 
 class LibrarySongs extends Songs<ISongsProps> {
   protected fetch: () => any;
