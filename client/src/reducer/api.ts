@@ -4,12 +4,12 @@ import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
 import { Artist, Track } from '../types';
 
-interface ISpotifyApiLoaders {
+interface IApiLoaders {
     artists: DataLoader<string, Artist>;
 }
 
-export default class SpotifyApi {
-    public loaders: ISpotifyApiLoaders;
+export default class Api {
+    public loaders: IApiLoaders;
     private accessToken: string;
 
     /**
@@ -25,7 +25,7 @@ export default class SpotifyApi {
      * Set access token.
      * @param accessToken Valid Spotify access token.
      */
-    public setToken(accessToken: string): SpotifyApi {
+    public setToken(accessToken: string): Api {
         this.accessToken = accessToken;
         this.loaders = this.createLoaders(accessToken);
         return this;
@@ -41,15 +41,8 @@ export default class SpotifyApi {
             qs: { limit },
         };
 
-        // Get first 50 items
-        const { total, items } = await rp(options);
-        // Build requests for remaining (total - 50) items
-        const requests = _.range(limit, total, limit)
-            .map(offset => rp({ ...options, qs: { limit, offset } }));
-        // Await all requests and map to tracks
-        const responses = (await Promise.all(requests)) as SpotifyApi.UsersSavedTracksResponse[];
-        return [...items, ..._.flatMap(responses, 'items')]
-            .map(i => i.track);
+        const items = await this.paginate<SpotifyApi.SavedTrackObject>(options);
+        return items.map(i => i.track);
     }
 
     /**
@@ -104,8 +97,44 @@ export default class SpotifyApi {
         if (response.statusCode !== 204) throw new PlayError(response.statusCode);
     }
 
+    /**
+     * Get tracks of a playlist.
+     * @param userId Id of Spotify user
+     * @param playlistId Id of user's playlist
+     */
+    public async getPlaylistTracks(userId: string, playlistId: string): Promise<Track[]> {
+        const limit = 100;
+        const options = {
+            uri: `https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,
+            headers: { Authorization: `Bearer ${this.accessToken}` },
+            json: true,
+            qs: { limit },
+        };
+
+        const items = await this.paginate<SpotifyApi.PlaylistTrackObject>(options);
+        return items.map(i => i.track);
+    }
+
+    /**
+     * Offset-iterate paging objects returned by a base request.
+     * @param options Options object passed to request-promise. qs.offfset is set inside to paginate.
+     */
+    public async paginate<T>(options: IPageableOptions): Promise<T[]> {
+        const { limit } = options.qs;
+        // Get first `limit` items
+        const { total, items } = (await rp(options)) as SpotifyApi.PagingObject<T>;
+        // Build offsets for remaining items
+        const offsets = _.range(limit, total, limit);
+        // Build requets from offsets
+        const requests = offsets.map(offset => rp({ ...options, qs: { limit, offset } }));
+        // Await requests
+        const responses = (await Promise.all(requests)) as Array<SpotifyApi.PagingObject<T>>;
+        // Merge first items with reponse items
+        return [...items, ..._.flatMap(responses, r => r.items)];
+    }
+
     /** Initiliaze data loaders. */
-    protected createLoaders(accessToken: string): ISpotifyApiLoaders {
+    protected createLoaders(accessToken: string): IApiLoaders {
         return {
             artists: new DataLoader((ids) => this.fetchArtists(accessToken, ids), { maxBatchSize: 50 }),
         };
@@ -136,3 +165,5 @@ class PlayError extends Error {
         this.statusCode = statusCode;
     }
 }
+
+type IPageableOptions = rp.Options & { qs: { limit: number, offset?: number } };

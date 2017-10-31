@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Track } from '../types';
-import SpotifyApi from './api';
+import Api from './api';
 import { handleResult } from './helpers';
 import { tracksQuery, artistsQueryBuilder } from './queries';
 
@@ -12,7 +12,7 @@ export const RECEIVE_TRACKS = 'RECEIVE_TRACKS';
 export const RECEIVE_ARTISTS = 'RECEIVE_ARTISTS';
 export const END_FETCH_TRACKS = 'END_FETCH_TRACKS';
 
-const api = new SpotifyApi();
+const api = new Api();
 
 export function setToken(accessToken: string) {
   api.setToken(accessToken);

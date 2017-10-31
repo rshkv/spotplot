@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import * as sinon from 'sinon';
-import SpotifyApi from '../client/src/reducer/api';
+import Api from '../client/src/reducer/api';
 import { accessToken } from './token';
 
 (global as any).XMLHttpRequest = sinon.useFakeXMLHttpRequest();
@@ -11,7 +11,7 @@ function log(obj) {
     console.log(JSON.stringify(obj, null, 2));
 }
 
-const api = new SpotifyApi(accessToken);
+const api = new Api(accessToken);
 
 describe('Api', () => {
 
@@ -32,5 +32,15 @@ describe('Api', () => {
         expect(artists.map(a => a.id)).to.have.ordered.members(ids);
         expect(artists[0]).to.have.property('popularity');
     });
+
+    it('should return playlist tracks', async () => {
+        // Designated playlist I created
+        const user = '1121825855';
+        const playlist = '3hCbSqdbKmCPlrwI6LdrxZ';
+
+        const tracks = await api.getPlaylistTracks(user, playlist);
+        expect(tracks.length).to.be.equal(200);
+        expect(tracks[0].id).to.be.equal('48RvhoZ9cVHyEUaVGSi20C');
+    }).timeout(2000);
 
 });
