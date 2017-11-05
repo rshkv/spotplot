@@ -1,13 +1,19 @@
 import * as DataLoader from 'dataloader';
 import * as _ from 'lodash';
+import * as qs from 'query-string';
 import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
 import { Artist, Track } from '../types';
+
+const CLIENT_ID = 'f736b78a9d9e4acfa110711839cad337';
+const CALLBACK_URI = 'http://localhost:3000/#/login';
+const SCOPES = ['user-library-read', 'user-modify-playback-state'];
 
 interface IApiLoaders {
     artists: DataLoader<string, Artist>;
 }
 
+/* tslint:disable member-ordering */
 export default class Api {
     public loaders: IApiLoaders;
     private accessToken: string;
@@ -19,6 +25,18 @@ export default class Api {
     constructor(accessToken?: string) {
         this.accessToken = accessToken;
         this.loaders = this.createLoaders(accessToken);
+    }
+
+    /** Create url for user to authenticate (implicit grant flow). */
+    public static authorizeUrl(): string {
+        const queryString = qs.stringify({
+            client_id: CLIENT_ID,
+            response_type: 'token',
+            redirect_uri: CALLBACK_URI,
+            scope: SCOPES.join(' '),
+        });
+
+        return `https://accounts.spotify.com/authorize?${queryString}`;
     }
 
     /**
