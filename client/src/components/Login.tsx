@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect, match as Match, RouteProps } from 'react-router-dom';
 import * as Redux from 'redux';
 import { setToken } from '../reducer/actions';
-import Api from '../reducer/Api';
+import Api from '../reducer/api';
 import { IStoreState } from '../types';
 
 export interface ILoginProps extends RouteProps {
