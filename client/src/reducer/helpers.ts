@@ -13,6 +13,11 @@ export function handleResult(r) {
   return r;
 }
 
+/**
+ * Utility to create a reducer with initial state and multiple handlers.
+ * @param initialState Initial state of store value.
+ * @param handlers Mapping from action type to handler function.
+ */
 export function createReducer(initialState, handlers) {
   return (state = initialState, action) => (
     (action.type in handlers) ?

@@ -1,3 +1,8 @@
+/**
+ * This file contains the actions. The actions here are defined as functions.
+ * A single action function will make API calls and return the created action.
+ * Returned actions here are objects or functions that are dispatched with the Thunk middleware.
+ */
 import * as _ from 'lodash';
 import { Dispatch } from 'redux';
 import { Track, IStoreState } from '../types';
@@ -15,14 +20,24 @@ export const END_FETCH_TRACKS = 'END_FETCH_TRACKS';
 
 const api = new Api();
 
+/**
+ * Sets the token in the API and store.
+ * @param accessToken Token
+ */
 export function setToken(accessToken: string) {
   api.setToken(accessToken);
   return { type: SET_TOKEN, accessToken };
 }
 
+/**
+ * Plays a track using the api and sets the id in the store.
+ * Stop playing if argument is not set, or the track is already playing.
+ * @param track Track to play. If undefined, stop playing.
+ */
 export function togglePlay(track?: Track) {
   return async (dispatch: Dispatch<IStoreState>, getState: () => IStoreState) => {
     const { isPlaying, playingTrack } = getState();
+    // Only play if track is set and different from the currently playing track
     if (track && (!playingTrack || track.uri !== playingTrack.uri)) {
       await api.playTrack(track.uri);
       dispatch({ type: SET_PLAY, track });
