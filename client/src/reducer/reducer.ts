@@ -1,16 +1,8 @@
 /* tslint:disable no-shadowed-variable */
 import { uniqBy } from 'lodash';
-import { combineReducers } from 'redux';
+import { combineReducers, Action } from 'redux';
 import { INetwork, Track } from '../types';
-import {
-  END_FETCH_TRACKS,
-  FETCH_TRACKS,
-  RECEIVE_TRACKS,
-  RECEIVE_ARTISTS,
-  SET_PLAY,
-  UNSET_PLAY,
-  SET_TOKEN,
-} from './actions';
+import Actions from './actions';
 import { linkArtists, createReducer } from './helpers';
 
 /**
@@ -28,60 +20,61 @@ export interface IStoreState {
 /**
  * Reducer accepting a token.
  */
-const accessToken = createReducer(null, {
-  [SET_TOKEN]: (_, action) => action.accessToken,
+const accessToken = createReducer<string, { type: Actions, accessToken: string }>(null, {
+  [Actions.SET_TOKEN]: (_, action) => action.accessToken,
 });
 
 /**
  * Reducer accepting tracks and artists to display in the network.
  */
-const network = createReducer({ tracks: [], artists: [], links: [] }, {
-  /**
-   * Override tracks with combined set of current and new tracks.
-   */
-  [RECEIVE_TRACKS](network: INetwork, action): INetwork {
-    return {
-      ...network,
-      tracks: uniqBy([...network.tracks, ...action.tracks], t => t.id),
-    };
-  },
-  /**
-   * Override artists with combined set of current and new tracks.
-   * Create links from current tracks.
-   */
-  [RECEIVE_ARTISTS](network: INetwork, action): INetwork {
-    return {
-      tracks: network.tracks,
-      artists: uniqBy([...network.artists, ...action.artists], a => a.id),
-      links: linkArtists(network.tracks),
-    };
-  },
+const network = createReducer<INetwork, { type: Actions, tracks: Track[], artists: any }>(
+  { tracks: [], artists: [], links: [] }, {
+    /**
+     * Override tracks with combined set of current and new tracks.
+     */
+    [Actions.RECEIVE_TRACKS](network, action): INetwork {
+      return {
+        ...network,
+        tracks: uniqBy([...network.tracks, ...action.tracks], t => t.id),
+      };
+    },
+    /**
+     * Override artists with combined set of current and new tracks.
+     * Create links from current tracks.
+     */
+    [Actions.RECEIVE_ARTISTS](network, action): INetwork {
+      return {
+        tracks: network.tracks,
+        artists: uniqBy([...network.artists, ...action.artists], a => a.id),
+        links: linkArtists(network.tracks),
+      };
+    },
 
-});
+  });
 
 /**
  * Reducer toggling track loading to show progress bar.
  */
-const isFetchingSongs = createReducer(false, {
-  [FETCH_TRACKS]: () => true,
-  [END_FETCH_TRACKS]: () => false,
+const isFetchingSongs = createReducer<boolean, Action>(false, {
+  [Actions.FETCH_TRACKS]: () => true,
+  [Actions.END_FETCH_TRACKS]: () => false,
 });
 
 /**
  * Reducer toggling accept state.
  * @todo Why do we need 'isPlaying' and 'playingTrack'?
  */
-const isPlaying = createReducer(false, {
-  [SET_PLAY]: () => true,
-  [UNSET_PLAY]: () => false,
+const isPlaying = createReducer<boolean, Action>(false, {
+  [Actions.SET_PLAY]: () => true,
+  [Actions.UNSET_PLAY]: () => false,
 });
 
 /**
  * Reducer accepting a track to play.
  */
-const playingTrack = createReducer(null, {
-  [SET_PLAY]: (_, action) => action.track,
-  [UNSET_PLAY]: () => null,
+const playingTrack = createReducer<Track, { type: Actions, track: Track }>(null, {
+  [Actions.SET_PLAY]: (_, action) => action.track,
+  [Actions.UNSET_PLAY]: () => null,
 });
 
 /**

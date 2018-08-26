@@ -1,5 +1,7 @@
 import { flatMap, map } from 'lodash';
+import { Action } from 'redux';
 import { ILink, Track } from '../types';
+import Actions from './actions';
 
 export function linkArtists(tracks: Track[]): ILink[] {
   return flatMap(tracks, t => (
@@ -18,8 +20,11 @@ export function handleResult(r) {
  * @param initialState Initial state of store value.
  * @param handlers Mapping from action type to handler function.
  */
-export function createReducer(initialState, handlers) {
-  return (state = initialState, action) => (
+export function createReducer<T, A extends Action>(
+  initialState: T,
+  handlers: { [a in Actions]?: (state: T, action: A) => T})
+  : ((T, Action) => T) {
+  return (state = initialState, action: A) => (
     (action.type in handlers) ?
       handlers[action.type](state, action) :
       state
