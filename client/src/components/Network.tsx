@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as React from 'react';
 // tslint:disable-next-line no-var-requires no-submodule-imports
 const colors = require('!!sass-variable-loader!../main.scss');
-import { INetwork, Track, Artist, isTrack } from '../types';
+import { INetwork, Track, Artist, isTrack, ILink } from '../types';
 
 export interface INetworkProps {
   network: INetwork;
@@ -15,29 +15,28 @@ export interface INetworkState {
   selectedNode: Track | Artist;
 }
 
+type NodeDatum = d3.SimulationNodeDatum & (Track | Artist);
+type LinkDatum = d3.SimulationLinkDatum<NodeDatum>;
+
 export default class Network extends React.Component<INetworkProps, INetworkState> {
-  private artistRadius: (d: Artist) => number;
-  private trackRadius: (d: Track) => number;
-  private radius: (d: any) => number;
+
+  private maxRadius: number = 3;
   private transform: d3.ZoomTransform;
   private network: HTMLCanvasElement;
-  private simulation: any; // TODO
+  private simulation: d3.Simulation<NodeDatum, LinkDatum>;
 
   constructor() {
     super();
     this.state = { selectedNode: null };
-    this.artistRadius = () => 3;
-    this.trackRadius = d => Math.max(Math.sqrt(d.popularity), 3);
-    this.radius = d => (isTrack(d) ? this.trackRadius(d) : this.artistRadius(d));
     this.transform = d3.zoomIdentity;
   }
 
   public componentDidMount() {
-    const linkForce = d3.forceLink<any, any>()
+    const linkForce = d3.forceLink<NodeDatum, LinkDatum>()
       .id(d => d.id)
-      .distance(l => 1 + this.trackRadius(l.source) + this.artistRadius(l.target));
+      .distance(l => 1 + this.radius(l.source as NodeDatum) + this.radius(l.target as NodeDatum));
 
-    const collideForce = d3.forceCollide()
+    const collideForce = d3.forceCollide<NodeDatum>()
       .radius(d => this.radius(d) + 1);
 
     const xForce = d3.forceX().strength(0.06);
@@ -47,7 +46,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     const chargeForce = d3.forceManyBody<any>()
       .strength(d => (!isTrack(d) ? -35 : -10));
 
-    this.simulation = d3.forceSimulation()
+    this.simulation = d3.forceSimulation<NodeDatum>()
       .alphaDecay(0.006)
       .force('link', linkForce)
       .force('collide', collideForce)
@@ -115,8 +114,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       .nodes(nodes)
       .on('tick', drawNetwork);
 
-    this.simulation
-      .force('link')
+    (this.simulation.force('link') as d3.ForceLink<NodeDatum, LinkDatum>)
       .links(links);
 
     const zoomed = () => {
@@ -177,5 +175,13 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
         const node = nodeUnderMouse();
         if (node) onClick(node);
       });
+  }
+
+  private radius(d: Artist | Track) {
+    return isTrack(d)
+      ? this.maxRadius
+      : Math.max(
+          Math.sqrt((d as Artist).popularity),
+          this.maxRadius);
   }
 }
