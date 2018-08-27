@@ -31,21 +31,27 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     this.transform = d3.zoomIdentity;
   }
 
+  /**
+   * Called once the network is added to the DOM. Initializes the node forces
+   * (link, collide, charge, and x/y forces to center nodes) and assembles the
+   * simulation.
+   */
   public componentDidMount() {
+    // Fix nodes to each other using links
     const linkForce = d3.forceLink<NodeDatum, LinkDatum>()
       .id(d => d.id)
       .distance(l => 1 + this.radius(l.source as NodeDatum) + this.radius(l.target as NodeDatum));
-
+    // Prevent nodes from overlapping
     const collideForce = d3.forceCollide<NodeDatum>()
       .radius(d => this.radius(d) + 1);
-
+    // Position nodes in the center
     const xForce = d3.forceX().strength(0.06);
-
     const yForce = d3.forceY().strength(0.06);
-
+    // Make nodes repel each other
     const chargeForce = d3.forceManyBody<any>()
       .strength(d => (!isTrack(d) ? -35 : -10));
 
+    // Assemble simulation
     this.simulation = d3.forceSimulation<NodeDatum>()
       .alphaDecay(0.006)
       .force('link', linkForce)

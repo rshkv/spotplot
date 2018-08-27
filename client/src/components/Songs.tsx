@@ -17,6 +17,11 @@ export interface ISongsState {
   displayNode?: Track | Artist;
 }
 
+/**
+ * Component fetching songs and passing data/handlers down to Network.
+ * This component is subclassed by LibrarySongs and PlaylistSongs.
+ * The only override they contain is the fetch function.
+ */
 class Songs<T extends ISongsProps> extends React.Component<T, ISongsState> {
   protected fetch: () => any;
 
