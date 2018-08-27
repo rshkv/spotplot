@@ -25,7 +25,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
   private network: HTMLCanvasElement;
   private simulation: d3.Simulation<NodeDatum, LinkDatum>;
 
-  constructor(props) {
+  constructor(props: Readonly<INetworkProps>) {
     super(props);
     this.state = { selectedNode: null };
     this.transform = d3.zoomIdentity;
@@ -63,7 +63,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     this.handleCanvasEvents();
   }
 
-  public shouldComponentUpdate(nextProps, nextState): boolean {
+  public shouldComponentUpdate(nextProps: Readonly<INetworkProps>, nextState: Readonly<INetworkState>): boolean {
     const { network } = nextProps;
     const { selectedNode } = nextState;
     const { tracks, artists, links } = network;
@@ -72,14 +72,14 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     const ctx = canvas.getContext('2d');
     const { width, height } = ctx.canvas;
 
-    const drawNode = (d) => {
+    const drawNode = (d: NodeDatum) => {
       ctx.moveTo(d.x, d.y);
       ctx.arc(d.x, d.y, this.radius(d), 0, 2 * Math.PI);
     };
 
-    const drawLine = (d) => {
-      ctx.moveTo(d.source.x, d.source.y);
-      ctx.lineTo(d.target.x, d.target.y);
+    const drawLine = (d: LinkDatum) => {
+      ctx.moveTo((d.source as NodeDatum).x, (d.source as NodeDatum).y);
+      ctx.lineTo((d.target as NodeDatum).x, (d.target as NodeDatum).y);
     };
 
     const drawNetwork = () => {
@@ -155,7 +155,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       const y = this.transform.invertY(d3.event.y) - (height / 2);
       const closestNode = this.simulation.find(x, y);
 
-      const isUnderMouse = (node) => {
+      const isUnderMouse = (node: NodeDatum) => {
         const sqNodeRadius = this.radius(node) ** 2;
         const sqDiffX = (x - node.x) ** 2;
         const sqDiffY = (y - node.y) ** 2;

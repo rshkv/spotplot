@@ -8,7 +8,9 @@
 		"target": "es5",
 		"jsx": "react",
 		"lib": [ "esnext", "dom" ],
-		"allowJs": true // TODO: Remove later
+		// "allowJs": true, // TODO: Remove later
+		"noImplicitAny": true,
+		"noImplicitReturns": true
 	},
 	"include": [
 		"./client/src/**/*"

@@ -59,4 +59,6 @@ class Login extends React.Component<ILoginProps, {}> {
   }
 }
 
-export default connect(({ accessToken }) => ({ accessToken }))(Login);
+export default connect(
+  ({ accessToken }: IStoreState): Partial<ILoginProps> => ({ accessToken }),
+)(Login);
