@@ -19,7 +19,7 @@ class Login extends React.Component<ILoginProps, {}> {
    * If this component mounts after authorization callback, the URL will contain
    * the returned access token. If it does, dispatch the token to the store.
    */
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { dispatch, match } = this.props;
     const { callbackHash } = match.params;
     const { access_token } = qs.parse(callbackHash);
@@ -29,7 +29,7 @@ class Login extends React.Component<ILoginProps, {}> {
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { accessToken } = this.props;
 
     if (accessToken) {

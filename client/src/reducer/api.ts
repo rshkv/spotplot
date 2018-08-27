@@ -82,14 +82,14 @@ export default class Api {
             .flatMap(t => _.map(t.artists, 'id'))
             .uniq()
             .value();
-        return await this.loaders.artists.loadMany(artistIds);
+        return this.loaders.artists.loadMany(artistIds);
     }
 
     /**
      * Play a track.
      * @param trackUri Spotify uri of form 'spotify:track:abc123'
      */
-    public async playTrack(trackUri: string) {
+    public async playTrack(trackUri: string): Promise<void> {
         const response = await rp.put({
             uri: 'https://api.spotify.com/v1/me/player/play',
             headers: { Authorization: `Bearer ${this.accessToken}` },
@@ -105,7 +105,7 @@ export default class Api {
      * Pause playback.
      * @param trackUri Spotify uri of form 'spotify:track:abc123'
      */
-    public async pause() {
+    public async pause(): Promise<void> {
         const response = await rp.put({
             uri: 'https://api.spotify.com/v1/me/player/pause',
             headers: { Authorization: `Bearer ${this.accessToken}` },

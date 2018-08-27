@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import * as React from 'react';
-// tslint:disable-next-line no-var-requires no-submodule-imports
+// tslint:disable-next-line no-var-requires no-submodule-imports no-implicit-dependencies
 const colors = require('!!sass-variable-loader!../main.scss');
 import { INetwork, Track, Artist, isTrack, ILink } from '../types';
 
@@ -36,7 +36,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
    * (link, collide, charge, and x/y forces to center nodes) and assembles the
    * simulation.
    */
-  public componentDidMount() {
+  public componentDidMount(): void {
     // Fix nodes to each other using links
     const linkForce = d3.forceLink<NodeDatum, LinkDatum>()
       .id(d => d.id)
@@ -63,7 +63,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     this.handleCanvasEvents();
   }
 
-  public shouldComponentUpdate(nextProps, nextState) {
+  public shouldComponentUpdate(nextProps, nextState): boolean {
     const { network } = nextProps;
     const { selectedNode } = nextState;
     const { tracks, artists, links } = network;
@@ -138,14 +138,14 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
     return false;
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
     return <canvas ref={(c) => { this.network = c; }} width={width} height={height} />;
   }
 
-  public handleCanvasEvents() {
+  public handleCanvasEvents(): void {
     const { onSelect, onUnselect, onClick } = this.props;
     const canvas = this.network;
     const { width, height } = canvas;
@@ -183,7 +183,7 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       });
   }
 
-  private radius(d: Artist | Track) {
+  private radius(d: Artist | Track): number {
     return isTrack(d)
       ? this.maxRadius
       : Math.max(

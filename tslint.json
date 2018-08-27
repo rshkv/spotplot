@@ -17,6 +17,7 @@
         "jsx-no-multiline-js": false,
         "curly": false,
         "object-literal-sort-keys": false,
-        "no-unused-variable": true
+        "no-unused-variable": true,
+        "typedef": [true, "call-signature"]
     }
 }
