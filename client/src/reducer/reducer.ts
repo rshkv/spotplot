@@ -2,7 +2,7 @@
 import { uniqBy } from 'lodash';
 import { combineReducers, Action } from 'redux';
 import { INetwork, Track } from '../types';
-import Actions from './actions';
+import Actions, { ITokenAction, IReceiveAction, IFetchTracksAction, IPlayingAction } from './actions';
 import { linkArtists, createReducer } from './helpers';
 
 /**
@@ -20,14 +20,14 @@ export interface IStoreState {
 /**
  * Reducer accepting a token.
  */
-const accessToken = createReducer<string, { type: Actions, accessToken: string }>(null, {
+const accessToken = createReducer<string, ITokenAction>(null, {
   [Actions.SET_TOKEN]: (_, action) => action.accessToken,
 });
 
 /**
  * Reducer accepting tracks and artists to display in the network.
  */
-const network = createReducer<INetwork, { type: Actions, tracks: Track[], artists: any }>(
+const network = createReducer<INetwork, IReceiveAction>(
   { tracks: [], artists: [], links: [] }, {
     /**
      * Override tracks with combined set of current and new tracks.
@@ -55,7 +55,7 @@ const network = createReducer<INetwork, { type: Actions, tracks: Track[], artist
 /**
  * Reducer toggling track loading to show progress bar.
  */
-const isFetchingSongs = createReducer<boolean, Action>(false, {
+const isFetchingSongs = createReducer<boolean, IFetchTracksAction>(false, {
   [Actions.FETCH_TRACKS]: () => true,
   [Actions.END_FETCH_TRACKS]: () => false,
 });
@@ -64,7 +64,7 @@ const isFetchingSongs = createReducer<boolean, Action>(false, {
  * Reducer toggling accept state.
  * @todo Why do we need 'isPlaying' and 'playingTrack'?
  */
-const isPlaying = createReducer<boolean, Action>(false, {
+const isPlaying = createReducer<boolean, IPlayingAction>(false, {
   [Actions.SET_PLAY]: () => true,
   [Actions.UNSET_PLAY]: () => false,
 });
@@ -72,7 +72,7 @@ const isPlaying = createReducer<boolean, Action>(false, {
 /**
  * Reducer accepting a track to play.
  */
-const playingTrack = createReducer<Track, { type: Actions, track: Track }>(null, {
+const playingTrack = createReducer<Track, IPlayingAction>(null, {
   [Actions.SET_PLAY]: (_, action) => action.track,
   [Actions.UNSET_PLAY]: () => null,
 });

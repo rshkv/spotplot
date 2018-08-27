@@ -3,18 +3,22 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, match as Match, RouteProps } from 'react-router-dom';
 import * as Redux from 'redux';
-import { setToken } from '../reducer/actions';
+import { setToken, ITokenAction } from '../reducer/actions';
 import Api from '../reducer/api';
 import { IStoreState } from '../types';
 
 export interface ILoginProps extends RouteProps {
-  dispatch: Redux.Dispatch<IStoreState>;
+  dispatch: Redux.Dispatch<ITokenAction>;
   match: Match<{ callbackHash?: string }>;
   accessToken: string;
 }
 
 class Login extends React.Component<ILoginProps, {}> {
 
+  /**
+   * If this component mounts after authorization callback, the URL will contain
+   * the returned access token. If it does, dispatch the token to the store.
+   */
   public componentDidMount() {
     const { dispatch, match } = this.props;
     const { callbackHash } = match.params;

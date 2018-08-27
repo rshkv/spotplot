@@ -9,18 +9,12 @@ export function linkArtists(tracks: Track[]): ILink[] {
   ));
 }
 
-// spotify-graphql doesn't throw errors by itself
-export function handleResult(r) {
-  if (r.errors) throw r.errors[r.errors.length - 1];
-  return r;
-}
-
 /**
  * Utility to create a reducer with initial state and multiple handlers.
  * @param initialState Initial state of store value.
  * @param handlers Mapping from action type to handler function.
  */
-export function createReducer<T, A extends Action>(
+export function createReducer<T, A extends Action<string>>(
   initialState: T,
   handlers: { [a in Actions]?: (state: T, action: A) => T})
   : ((T, Action) => T) {

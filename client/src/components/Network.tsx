@@ -25,8 +25,8 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
   private network: HTMLCanvasElement;
   private simulation: d3.Simulation<NodeDatum, LinkDatum>;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { selectedNode: null };
     this.transform = d3.zoomIdentity;
   }
@@ -89,17 +89,17 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
       ctx.scale(this.transform.k, this.transform.k);
       ctx.translate(width / 2, height / 2);
 
-      ctx.strokeStyle = colors.blue;
+      ctx.strokeStyle = colors.green;
       ctx.beginPath();
       links.forEach(drawLine);
       ctx.stroke();
 
-      ctx.fillStyle = colors.green;
+      ctx.fillStyle = colors.blue;
       ctx.beginPath();
       tracks.forEach(drawNode);
       ctx.fill();
 
-      ctx.fillStyle = colors.blue;
+      ctx.fillStyle = colors.green;
       ctx.beginPath();
       artists.forEach(drawNode);
       ctx.fill();
