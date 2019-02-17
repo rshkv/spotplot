@@ -25,7 +25,7 @@ export interface ISongsState {
 class Songs<T extends ISongsProps> extends React.Component<T, ISongsState> {
   protected fetch: () => any;
 
-  constructor(props) {
+  constructor(props: T) {
     super(props);
     this.state = { selectedNode: null };
   }

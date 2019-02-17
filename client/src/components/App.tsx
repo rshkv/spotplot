@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-const App = (props) => {
-  const { children } = props;
-  return (
-    <div className="app">
-      {children}
-    </div>
-  );
-};
-
-export default App;
+export default class App extends React.Component<{ children: React.ReactNode }> {
+  render() {
+    const { children } = this.props;
+    return (
+      <div className="app">
+        {children}
+      </div>
+    );
+  }
+}

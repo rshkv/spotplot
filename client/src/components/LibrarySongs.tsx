@@ -7,7 +7,7 @@ import Songs, { ISongsProps } from './Songs';
 class LibrarySongs extends Songs<ISongsProps> {
   protected fetch: () => any;
 
-  constructor(props) {
+  constructor(props: ISongsProps) {
     super(props);
     this.fetch = fetchSongs;
   }

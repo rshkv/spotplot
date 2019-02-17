@@ -20,10 +20,10 @@ export const enum Actions {
   RECEIVE_ARTISTS = 'RECEIVE_ARTISTS',
 }
 // tslint:disable no-empty-interface
-export interface ITokenAction extends Action<string> { accessToken: string; }
-export interface IPlayingAction extends Action<string> { track?: Track; }
-export interface IFetchTracksAction extends Action<string> { }
-export interface IReceiveAction extends Action<string> { tracks?: Track[]; artists?: Artist[]; }
+export interface ITokenAction extends Action<Actions> { accessToken: string; }
+export interface IPlayingAction extends Action<Actions> { track?: Track; }
+export interface IFetchTracksAction extends Action<Actions> { }
+export interface IReceiveAction extends Action<Actions> { tracks?: Track[]; artists?: Artist[]; }
 export default Actions;
 
 /**

@@ -22,7 +22,7 @@ class Login extends React.Component<ILoginProps, {}> {
   public componentDidMount(): void {
     const { dispatch, match } = this.props;
     const { callbackHash } = match.params;
-    const { access_token } = qs.parse(callbackHash);
+    const { access_token } = qs.parse(callbackHash) as { access_token?: string };
 
     if (access_token) {
       dispatch(setToken(access_token));

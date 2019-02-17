@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState, isTrack } from '../types';
+import { Artist, Track, IStoreState, isTrack } from '../types';
 import './Player.scss';
-
-type Track = SpotifyApi.TrackObjectFull;
-type Artist = SpotifyApi.ArtistObjectFull;
 
 export interface IPlayerProps {
   isPlaying: boolean;
@@ -58,7 +55,7 @@ export class Player extends React.Component<IPlayerProps, {}> {
   }
 }
 
-const mapStateToProps = ({ isPlaying, playingTrack }: IStoreState): Partial<IPlayerProps> => ({
+const mapStateToProps = ({ isPlaying, playingTrack }: IStoreState) => ({
   isPlaying,
   playingTrack,
 });

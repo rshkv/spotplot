@@ -14,10 +14,10 @@ export function linkArtists(tracks: Track[]): ILink[] {
  * @param initialState Initial state of store value.
  * @param handlers Mapping from action type to handler function.
  */
-export function createReducer<T, A extends Action<string>>(
-  initialState: T,
-  handlers: { [a in Actions]?: (state: T, action: A) => T})
-  : ((T, Action) => T) {
+export function createReducer<S, A extends Action<Actions>>(
+  initialState: S,
+  handlers: { [a in Actions]?: (state: S, action: A) => S }
+): ((state: S, action: A) => S) {
   return (state = initialState, action: A) => (
     (action.type in handlers) ?
       handlers[action.type](state, action) :

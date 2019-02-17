@@ -9,12 +9,12 @@ export interface IProgressProps {
 
 export default class Progress extends React.Component<IProgressProps, {}> {
 
-  public componentWillReceiveProps(nextProps) {
+  public componentWillReceiveProps(nextProps: IProgressProps): void {
     const { progress } = nextProps;
     if (progress) NProgress.set(progress);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return null;
   }
 

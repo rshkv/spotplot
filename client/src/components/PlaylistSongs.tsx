@@ -12,7 +12,7 @@ interface IPlaylistSongsProps extends ISongsProps {
 class PlaylistSongs extends Songs<IPlaylistSongsProps> {
   protected fetch: () => any;
 
-  constructor(props) {
+  constructor(props: IPlaylistSongsProps) {
     super(props);
     this.fetch = () => {
       const { user, playlist } = this.props.match.params;

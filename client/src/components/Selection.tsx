@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 interface ISelectionState {
     enteredPlaylist?: string;
 }
 
-export default class Selection extends React.Component<any, ISelectionState> {
+export default class Selection extends React.Component<RouteComponentProps, ISelectionState> {
 
-    public constructor(props) {
+    public constructor(props: RouteComponentProps) {
         super(props);
         this.state = { enteredPlaylist: 'https://open.spotify.com/user/spotify/playlist/37i9dQZF1DX8CopunbDxgW' };
 
@@ -65,11 +65,11 @@ export default class Selection extends React.Component<any, ISelectionState> {
         return { user, playlist };
     }
 
-    protected handleChange(event) {
+    protected handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         this.setState({ enteredPlaylist: event.target.value });
     }
 
-    protected handleSubmit(event) {
+    protected handleSubmit(event: React.FormEvent) {
         const { enteredPlaylist } = this.state;
         const { user, playlist } = this.parsePlaylist(enteredPlaylist);
         event.preventDefault();
