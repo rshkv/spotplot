@@ -1,4 +1,4 @@
-import * as qs from 'query-string';
+import * as qs from 'qs';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, match as Match, RouteProps } from 'react-router-dom';

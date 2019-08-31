@@ -1,6 +1,6 @@
 import * as DataLoader from 'dataloader';
 import * as _ from 'lodash';
-import * as qs from 'query-string';
+import * as qs from 'qs';
 import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
 import { Artist, Track } from '../types';
