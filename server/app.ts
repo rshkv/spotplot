@@ -5,8 +5,7 @@ const PORT = 3000;
 const app = express();
 
 app
-  .use('/', express.static(path.resolve(__dirname, '../client/dist')))
-  .use('/node_modules', express.static(path.resolve(__dirname, '../node_modules')))
+  .use('/', express.static(path.resolve(__dirname, '..')))
   .listen(PORT, () => {
     // tslint:disable-next-line no-console
     console.log(`Server listening on port ${PORT}`);

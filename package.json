@@ -60,8 +60,8 @@
     "webpack-cli": "^3.3.7"
   },
   "scripts": {
-    "dev": "webpack --watch",
-    "build": "webpack -p",
+    "dev": "webpack --watch --mode=development",
+    "build": "webpack --mode=production",
     "start": "ts-node server/app.ts",
     "test": "mocha -r ts-node/register -r jsdom-global/register spec/**/*.spec.ts"
   },
