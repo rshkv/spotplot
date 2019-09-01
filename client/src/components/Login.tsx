@@ -44,11 +44,8 @@ class Login extends React.Component<ILoginProps, {}> {
         </div>
           <div className="d-flex flex-column align-items-center w-25 m-3">
             <p className="text-justify">
-              Spotplot is a new way to sift through your music on Spotify.
-            Spot the musicians and collaborations behind the music you love.
-            Spotplot can display playlists or your library songs.
-            To get started, please login:
-          </p>
+              Spotplot is a new way to listen to your Spotify library. Explore with your eyes, enjoy with your ears. Login to get started:
+            </p>
             <div>
               <a href={loginUri} className="button">LOGIN</a>
             </div>
