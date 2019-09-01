@@ -38,7 +38,6 @@
     "@types/request-promise": "^4.1.44",
     "@types/sinon": "^2.3.7",
     "@types/spotify-api": "0.0.0",
-    "awesome-typescript-loader": "^3.5.0",
     "chai": "^4.1.2",
     "css-loader": "^3.2.0",
     "jsdom": "11.3.0",
@@ -52,11 +51,13 @@
     "sinon": "^4.5.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.13.2",
+    "ts-loader": "^6.0.4",
     "ts-node": "^3.3.0",
     "tslint": "^5.19.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.6.2",
-    "webpack": "^2.2.1"
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
   },
   "scripts": {
     "dev": "webpack --watch",

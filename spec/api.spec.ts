@@ -13,7 +13,7 @@ const ACCESS_TOKEN = 'BQCphCq4bazTtA1krYmur5oDr12RPWyKvYbWyMUfIe6xb1Ke6wgEkFBoDf
 // To run browser-like http requests in Node
 (global as any).XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 // Utility to pretty-print request results
-function log(obj) {
+function log(obj: any) {
     /* tslint:disable no-console */
     console.log(JSON.stringify(obj, null, 2));
 }
