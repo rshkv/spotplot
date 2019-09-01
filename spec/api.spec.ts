@@ -9,7 +9,7 @@ import * as sinon from 'sinon';
 import Api from '../client/src/reducer/api';
 
 // tslint:disable-next-line max-line-length
-const ACCESS_TOKEN = 'BQCphCq4bazTtA1krYmur5oDr12RPWyKvYbWyMUfIe6xb1Ke6wgEkFBoDf-gJ8To1J-f-5y0BmbPHoJiuFbQFxQQBge8-PdpMKlhSJaJ_YiYytHiOeBbnYIRG-2UlhughVnWTtiXT-H79iJrKzLvnVmEPM9vy5uGOm9d06N5UEP26fm-OqfDWIQX';
+const ACCESS_TOKEN = 'ACCESS_TOKEN';
 // To run browser-like http requests in Node
 (global as any).XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 // Utility to pretty-print request results
