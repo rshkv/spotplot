@@ -35,7 +35,7 @@ class Login extends React.Component<ILoginProps, {}> {
     if (accessToken) {
       return (<Redirect to="/selection" />);
     } else {
-      const loginUri = Api.authorizeUrl();
+      const loginUri = Api.authorizeUrl(Login.urlWithoutRoute());
 
       return (
         <div className="d-flex justify-content-center align-items-center h-100">
@@ -53,6 +53,11 @@ class Login extends React.Component<ILoginProps, {}> {
         </div>
       );
     }
+  }
+
+  private static urlWithoutRoute(): string {
+    const fullUrl: string = window.location.href;
+    return fullUrl.substring(0, fullUrl.indexOf('#'));
   }
 }
 

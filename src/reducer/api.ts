@@ -3,10 +3,11 @@ import * as _ from 'lodash';
 import * as qs from 'qs';
 import * as rp from 'request-promise';
 import * as errors from 'request-promise/errors'; // tslint:disable-line no-submodule-imports
+import * as url from 'url';
 import { Artist, Track } from '../types';
 
 const CLIENT_ID = 'f736b78a9d9e4acfa110711839cad337';
-const CALLBACK_URI = 'http://localhost:3000/#/login';
+const CALLBACK_ROUTE = '#/login';
 const SCOPES = ['user-library-read', 'user-modify-playback-state'];
 
 interface IApiLoaders {
@@ -28,11 +29,11 @@ export default class Api {
     }
 
     /** Create url for user to authenticate (implicit grant flow). */
-    public static authorizeUrl(): string {
+    public static authorizeUrl(baseUrl: string): string {
         const queryString = qs.stringify({
             client_id: CLIENT_ID,
             response_type: 'token',
-            redirect_uri: CALLBACK_URI,
+            redirect_uri: url.resolve(baseUrl, CALLBACK_ROUTE),
             scope: SCOPES.join(' '),
         });
 
