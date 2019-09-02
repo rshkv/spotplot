@@ -6,7 +6,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import * as sinon from 'sinon';
-import Api from '../client/src/reducer/api';
+import Api from '../src/reducer/api';
 
 // tslint:disable-next-line max-line-length
 const ACCESS_TOKEN = 'ACCESS_TOKEN';
@@ -42,10 +42,9 @@ describe('Api', () => {
 
     it('should return playlist tracks', async () => {
         // Designated playlist I created
-        const user = '1121825855';
         const playlist = '3hCbSqdbKmCPlrwI6LdrxZ';
 
-        const tracks = await api.getPlaylistTracks(user, playlist);
+        const tracks = await api.getPlaylistTracks(playlist);
         expect(tracks.length).to.be.equal(200);
         expect(tracks[0].id).to.be.equal('48RvhoZ9cVHyEUaVGSi20C');
     }).timeout(5000);

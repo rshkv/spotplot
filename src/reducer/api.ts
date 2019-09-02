@@ -118,13 +118,12 @@ export default class Api {
 
     /**
      * Get tracks of a playlist.
-     * @param userId Id of Spotify user
      * @param playlistId Id of user's playlist
      */
-    public async getPlaylistTracks(userId: string, playlistId: string): Promise<Track[]> {
+    public async getPlaylistTracks(playlistId: string): Promise<Track[]> {
         const limit = 100;
         const options = {
-            uri: `https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,
+            uri: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
             headers: { Authorization: `Bearer ${this.accessToken}` },
             json: true,
             qs: { limit },
