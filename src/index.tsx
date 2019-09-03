@@ -39,7 +39,7 @@ class Root extends React.Component {
               <Route path="/error/:error" component={Error} />
               <Route path="/selection" component={Selection} />
               <Route path="/songs" component={LibrarySongs} />
-              <Route path="/playlist/:user/:playlist" component={PlaylistSongs} />
+              <Route path="/playlist/:playlistId" component={PlaylistSongs} />
               <Redirect exact={true} from="/" to="/login" />
               {/* tslint:disable jsx-no-lambda */}
               <Route

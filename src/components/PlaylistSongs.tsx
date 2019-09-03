@@ -6,7 +6,7 @@ import {  IStoreState } from '../types';
 import Songs, { ISongsProps } from './Songs';
 
 interface IPlaylistSongsProps extends ISongsProps {
-  match: Match<{ user: string, playlist: string }>;
+  match: Match<{ playlistId: string }>;
 }
 
 class PlaylistSongs extends Songs<IPlaylistSongsProps> {
@@ -15,8 +15,8 @@ class PlaylistSongs extends Songs<IPlaylistSongsProps> {
   constructor(props: IPlaylistSongsProps) {
     super(props);
     this.fetch = () => {
-      const { user, playlist } = this.props.match.params;
-      return fetchPlaylist(user, playlist);
+      const { playlistId } = this.props.match.params;
+      return fetchPlaylist(playlistId);
     };
   }
 }

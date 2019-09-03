@@ -67,11 +67,11 @@ export function fetchSongs():
   };
 }
 
-export function fetchPlaylist(userId: string, playlistId: string):
+export function fetchPlaylist(playlistId: string):
   ThunkAction<void, IStoreState, void, IFetchTracksAction | IReceiveAction> {
   return async (dispatch) => {
     dispatch({ type: Actions.FETCH_TRACKS });
-    const tracks = await API.getPlaylistTracks(userId, playlistId);
+    const tracks = await API.getPlaylistTracks(playlistId);
     dispatch({ type: Actions.RECEIVE_TRACKS, tracks });
     const artists = await API.getArtistsFromTracks(tracks);
     dispatch({ type: Actions.RECEIVE_ARTISTS, artists });

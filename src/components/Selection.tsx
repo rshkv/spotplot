@@ -58,11 +58,18 @@ export default class Selection extends React.Component<RouteComponentProps, ISel
         );
     }
 
-    protected parsePlaylist(url: string): { user: string, playlist: string } {
-        const regex = /user[:\/](\w*)[:\/]playlist[:\/](\w*)/;
-        const match = regex.exec(url);
-        const [fullMatch, user, playlist] = match;
-        return { user, playlist };
+    /**
+     * Parses the playlist id from a Spotify url or identifier.
+     * @param uri Spotify link or uri
+     */
+    public static parsePlaylistId(uri: string): string | null {
+        const regex = /playlist(?:\/|:)(?<playlistId>[^\?]+)/;
+        try {
+            const { groups: { playlistId } } = regex.exec(uri);
+            return playlistId;
+        } catch (e) {
+            return null;
+        }
     }
 
     protected handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -71,9 +78,16 @@ export default class Selection extends React.Component<RouteComponentProps, ISel
 
     protected handleSubmit(event: React.FormEvent) {
         const { enteredPlaylist } = this.state;
-        const { user, playlist } = this.parsePlaylist(enteredPlaylist);
+        const playlistId: string | null = Selection.parsePlaylistId(enteredPlaylist);
+        console.log(playlistId);
+        if (playlistId) {
+            this.props.history.push(`/playlist/${playlistId}`);
+        } else {
+            window.alert(
+                `Failed to parse playlist link: '${enteredPlaylist}'\n\n` +
+                "Try an URI like 'spotify:playlist:37i...'\nor 'https://open.spotify.com/playlist/37i...'");
+        }
         event.preventDefault();
-        this.props.history.push(`/playlist/${user}/${playlist}`);
     }
 
 }

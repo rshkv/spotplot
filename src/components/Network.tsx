@@ -64,10 +64,9 @@ export default class Network extends React.Component<INetworkProps, INetworkStat
   }
 
   public shouldComponentUpdate(nextProps: Readonly<INetworkProps>, nextState: Readonly<INetworkState>): boolean {
-    const { network } = nextProps;
     const { selectedNode } = nextState;
-    const { tracks, artists, links } = network;
-    const nodes = [...tracks, ...artists];
+    const { tracks, artists, links } = nextProps.network;
+    const nodes: NodeDatum[] = [...tracks, ...artists];
     const canvas = this.network;
     const ctx = canvas.getContext('2d');
     const { width, height } = ctx.canvas;
